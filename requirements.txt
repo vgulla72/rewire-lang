@@ -1,0 +1,6 @@
+streamlit
+pdfplumber
+openai
+langchain
+langchain-openai
+pydantic
