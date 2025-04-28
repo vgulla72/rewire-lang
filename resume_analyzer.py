@@ -21,6 +21,16 @@ class ResumeAnalyzer:
         """Uses LLM to extract structured resume info (e.g., name, roles, skills)."""
         prompt = f"""
         Extract structured information from the following resume.
+        Extract the following fields:
+        - Name
+        - Email
+        - Phone Number
+        - Education (degree, institution, graduation year)
+        - Location (state, country)
+        - Work Experience (title, company, duration)
+        - Skills
+        - Certifications
+        - Years of Experience 
         Format the output as JSON in this schema:
         {self.structured_parser.get_format_instructions()}
 
@@ -36,11 +46,15 @@ class ResumeAnalyzer:
         Based on the resume text below, infer:
         - Primary Domain (e.g., Data Science, Frontend Engineering)
         - Likely Industry (e.g., Fintech, E-commerce)
+        - Preferred Location (e.g., Greater Seattle Area, WA)
         - Experience Level (e.g., Entry, Mid, Senior, Executive)
-        - Estimated Compensation Range in USD (e.g., 100k-120k)
+        - Current compensation (USD)
+        - Estimated Compensation Range in USD 
         - Individual Contributor or Managerial Role
         - Likely Personality Traits
-
+        - Workplace likes
+        - Workplace dislikes
+        - Years of Experience
         Return the result as JSON in this format:
         {self.insight_parser.get_format_instructions()}
 

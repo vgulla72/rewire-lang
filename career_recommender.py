@@ -1,7 +1,8 @@
-from langchain.tools import tool
+from typing import List
 from pydantic import BaseModel
-from typing import Optional
-from langchain_openai import ChatOpenAI
+from langchain.tools import tool
+from langchain.output_parsers import PydanticOutputParser
+from langchain.chat_models import ChatOpenAI
 
 llm = ChatOpenAI(temperature=0)
 
@@ -9,16 +10,32 @@ llm = ChatOpenAI(temperature=0)
 class CareerInput(BaseModel):
     structured_info: dict
     inferred_insights: dict
-    career_change_reason: Optional[str] = None
-    hobbies_and_passions: Optional[str] = None
+    career_change_reason: str
+    hobbies_and_passions: str
+
+# Define output model
+class CareerRecommendation(BaseModel):
+    title: str
+    reason: str
+
+class CareerRecommendationsOutput(BaseModel):
+    career_recommendations: List[CareerRecommendation]
+
+# Instantiate LLM
+llm = ChatOpenAI(temperature=0, model="gpt-4")
+
+# Output parser
+career_parser = PydanticOutputParser(pydantic_object=CareerRecommendationsOutput)
 
 @tool
-def recommend_career_paths(input_data: CareerInput) -> str:
+def recommend_career_paths(input_data: CareerInput) -> CareerRecommendationsOutput:
     """Recommend career paths based on resume and personal context."""
-    
+
+    format_instructions = career_parser.get_format_instructions()
+
     prompt = f"""
     Based on the following structured resume info, inferred insights, career change reason, and hobbies/passions,
-    suggest 3-4 potential career paths. Provide reasoning for each suggestion.
+    suggest 3-4 potential career paths. Suggest only official job titles and do not fabricate roles. Provide reasoning for each suggestion.
 
     Structured Info:
     {input_data.structured_info}
@@ -32,12 +49,8 @@ def recommend_career_paths(input_data: CareerInput) -> str:
     Hobbies/Passions:
     {input_data.hobbies_and_passions}
 
-    Format your response as:
-    1. Role: ...
-       Why: ...
-    2. Role: ...
-       Why: ...
+    {format_instructions}
     """
 
     response = llm.invoke(prompt)
-    return response.content
+    return career_parser.parse(response.content)

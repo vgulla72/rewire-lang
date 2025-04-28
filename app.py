@@ -3,11 +3,13 @@ from resume_analyzer import ResumeAnalyzer
 import tempfile
 import os
 from career_recommender import recommend_career_paths, CareerInput
+from company_recommender import recommend_companies, CompanyInput
+from people_recommender import find_people_transitions, PeopleSearchInput
 from langchain_openai import ChatOpenAI
 from langchain.tools import tool
 
 st.set_page_config(page_title="AI Resume Analyzer", layout="wide")
-st.title("📄 AI Resume Analyzer")
+st.title("📄 RewireMe")
 st.markdown("Upload a resume PDF and get structured information and insights.")
 
 # Use a form to control submission
@@ -48,7 +50,8 @@ if submitted and uploaded_file:
             if hobbies_input.strip():
                 st.subheader("🏓 Hobbies / Passions")
                 st.write(hobbies_input)
-           # Call the career recommender tool
+            
+            # Call the career recommender tool
             career_input = CareerInput(
                 structured_info=result["structured_info"],
                 inferred_insights=result["inferred_insights"],
@@ -61,10 +64,37 @@ if submitted and uploaded_file:
             st.subheader("🚀 Career Recommendations")     
             st.write(career_recommendations)
 
+            # Call the company recommender tool
+            company_input = CompanyInput(
+                structured_info=result["structured_info"],
+                inferred_insights=result["inferred_insights"],
+                career_change_reason=reason_for_change,
+                hobbies_and_passions=hobbies_input,
+                career_recommendations=career_recommendations
+            )
+            company_recommendations = recommend_companies.invoke({
+                "input_data": company_input.model_dump()
+            })
+            st.subheader("🚀 Company Recommendations")     
+            st.write(company_recommendations)
+            
+            # Call the people recommender tool
+            st.subheader("🔍 People Search")
+            people_input = PeopleSearchInput(
+            previous_title=result["structured_info"].get("work_experience", [{}])[0].get("title", ""),
+            location=result["structured_info"].get("location", ""),
+            recommended_roles=career_recommendations,
+            recommended_companies=company_recommendations,
+            )
+            people_recommendations = find_people_transitions(people_input)
+            st.subheader("🚀 People Recommendations")
+            st.write(people_recommendations)
+
         except Exception as e:
             st.error(f"Something went wrong: {e}")
         finally:
             if tmp_path and os.path.exists(tmp_path):
                 os.remove(tmp_path)
+
 elif submitted and not uploaded_file:
     st.warning("⚠️ Please upload a PDF file before submitting.")
