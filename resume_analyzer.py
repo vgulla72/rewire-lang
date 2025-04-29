@@ -2,12 +2,23 @@ import os
 import pdfplumber
 from langchain_openai import ChatOpenAI
 from langchain.output_parsers import PydanticOutputParser
-from models import StructuredResumeInfo, InferredProfileInsights  # your Pydantic models
+from models import StructuredResumeInfo, InferredProfileInsights
+
+api_key = os.getenv("OPENROUTER_API_KEY")
 
 class ResumeAnalyzer:
-    def __init__(self, model_name="gpt-4o-mini", temperature=0):
-        os.environ["OPENAI_MODEL_NAME"] = model_name
-        self.llm = ChatOpenAI(temperature=temperature)
+    def __init__(self, model_name="deepseek/deepseek-chat-v3-0324:free", temperature=0):
+        # Configure OpenRouter
+        self.llm = ChatOpenAI(
+            model=model_name,  # Note: changed from model_name to model
+            temperature=temperature,
+            openai_api_base="https://openrouter.ai/api/v1",  # Remove /chat/completions
+            openai_api_key=api_key,
+            default_headers={
+                "HTTP-Referer": "https://rewireme.me",  # Required
+                "X-Title": "Resume Analyzer"  # Recommended
+            }
+        )
         self.structured_parser = PydanticOutputParser(pydantic_object=StructuredResumeInfo)
         self.insight_parser = PydanticOutputParser(pydantic_object=InferredProfileInsights)
 
@@ -18,22 +29,10 @@ class ResumeAnalyzer:
         return text
 
     def extract_structured_info(self, resume_text: str) -> StructuredResumeInfo:
-        """Uses LLM to extract structured resume info (e.g., name, roles, skills)."""
+        """Uses LLM to extract structured resume info."""
         prompt = f"""
         Extract structured information from the following resume.
-        Extract the following fields:
-        - Name
-        - Email
-        - Phone Number
-        - Education (degree, institution, graduation year)
-        - Location (state, country)
-        - Work Experience (title, company, duration)
-        - Skills
-        - Certifications
-        - Years of Experience 
-        Format the output as JSON in this schema:
         {self.structured_parser.get_format_instructions()}
-
         Resume:
         {resume_text}
         """
@@ -41,23 +40,10 @@ class ResumeAnalyzer:
         return self.structured_parser.parse(response.content)
 
     def infer_insights(self, resume_text: str) -> InferredProfileInsights:
-        """Uses LLM to infer high-level insights from the resume text."""
+        """Uses LLM to infer high-level insights."""
         prompt = f"""
-        Based on the resume text below, infer:
-        - Primary Domain (e.g., Data Science, Frontend Engineering)
-        - Likely Industry (e.g., Fintech, E-commerce)
-        - Preferred Location (e.g., Greater Seattle Area, WA)
-        - Experience Level (e.g., Entry, Mid, Senior, Executive)
-        - Current compensation (USD)
-        - Estimated Compensation Range in USD 
-        - Individual Contributor or Managerial Role
-        - Likely Personality Traits
-        - Workplace likes
-        - Workplace dislikes
-        - Years of Experience
-        Return the result as JSON in this format:
+        Analyze the resume and provide insights:
         {self.insight_parser.get_format_instructions()}
-
         Resume:
         {resume_text}
         """
@@ -74,10 +60,8 @@ class ResumeAnalyzer:
             "inferred_insights": inferred.model_dump()
         }
 
-
-# Example
 if __name__ == "__main__":
-    analyzer = ResumeAnalyzer()
+    analyzer = ResumeAnalyzer(model_name="deepseek/deepseek-chat-v3-0324:free")  # Use correct model name
     file_path = "/Users/vasanthagullapalli/Documents/Vasantha Gullapalli Resume.pdf"
     result = analyzer.analyze(file_path)
     print(result)

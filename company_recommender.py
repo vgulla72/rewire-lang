@@ -2,8 +2,11 @@ from typing import List
 from pydantic import BaseModel
 from langchain.tools import tool
 from langchain.output_parsers import PydanticOutputParser
-from langchain.chat_models import ChatOpenAI
+#from langchain.chat_models import ChatOpenAI
+from langchain_openai import ChatOpenAI
 from career_recommender import CareerInput, CareerRecommendationsOutput
+import os
+api_key = os.getenv("OPENROUTER_API_KEY")
 
 # Define input model
 class CompanyInput(BaseModel):
@@ -23,7 +26,18 @@ class CompanyRecommendationsOutput(BaseModel):
     recommendations: List[CompanyRecommendation]
 
 # Instantiate LLM
-llm = ChatOpenAI(temperature=0, model="gpt-4")
+#llm = ChatOpenAI(temperature=0, model="gpt-4o")
+model_name = "deepseek/deepseek-chat-v3-0324:free"  # Example model name
+llm = ChatOpenAI(
+            model=model_name,  # Note: changed from model_name to model
+            temperature=0,
+            openai_api_base="https://openrouter.ai/api/v1",  # Remove /chat/completions
+            openai_api_key=api_key,
+            default_headers={
+                "HTTP-Referer": "https://rewireme.me",  # Required
+                "X-Title": "Resume Analyzer"  # Recommended
+            }
+        )
 
 # Output parser
 parser = PydanticOutputParser(pydantic_object=CompanyRecommendationsOutput)

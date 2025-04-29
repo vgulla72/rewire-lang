@@ -10,6 +10,8 @@ import streamlit as st
 import requests
 import os
 
+api_key = os.getenv("OPENROUTER_API_KEY")
+
 # Input Model
 class PeopleSearchInput(BaseModel):
     previous_title: str
@@ -32,7 +34,18 @@ class PeopleSearchOutput(BaseModel):
     matches: List[PersonExample]
 
 # LLM Setup
-llm = ChatOpenAI(temperature=0.2, model="gpt-4")
+#llm = ChatOpenAI(temperature=0.2, model="gpt-4o")
+model_name = "deepseek/deepseek-chat-v3-0324:free"  # Example model name
+llm = ChatOpenAI(
+            model=model_name,  # Note: changed from model_name to model
+            temperature=0,
+            openai_api_base="https://openrouter.ai/api/v1",  # Remove /chat/completions
+            openai_api_key= api_key,
+            default_headers={
+                "HTTP-Referer": "https://rewireme.me",  # Required
+                "X-Title": "Resume Analyzer"  # Recommended
+            }
+        )
 parser = PydanticOutputParser(pydantic_object=PeopleSearchOutput)
 
 # Web Search Helper (Serper)
@@ -171,13 +184,13 @@ if __name__ == "__main__":
     
     # Example input data
     input_data = PeopleSearchInput(
-        previous_title="Marketing Director",
+        previous_title="Director of Technology",
         location="Seattle, WA",
         recommended_roles=CareerRecommendationsOutput(
             career_recommendations=[
-                CareerRecommendation(title="CMO", reason="Career progression"),
-                CareerRecommendation(title="VP of Marketing", reason="Career progression"),
-                CareerRecommendation(title="Marketing Consultant", reason="Alternative path")
+                CareerRecommendation(title="CTO", reason="Career progression"),
+                CareerRecommendation(title="VP of Engineering", reason="Career progression"),
+                CareerRecommendation(title="Technology Consultant", reason="Alternative path")
             ]
         ),
         recommended_companies=CompanyRecommendationsOutput(
