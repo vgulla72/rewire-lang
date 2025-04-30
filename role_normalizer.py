@@ -50,15 +50,15 @@ def search_similar_jobs(query_title: str, reason: str, k: int = 5):
     vector_store = FAISS.load_local(VECTOR_STORE_DIR, embedding_model, allow_dangerous_deserialization=True)
 
     query = f"{query_title} - {reason}"
-    results = vector_store.similarity_search(query, k=k)
+    results = vector_store.similarity_search_with_score(query, k=k)  # <-- use _with_score
 
     return [
         {
             "Job Title": doc.metadata["Job Title"],
             "Job Description": doc.metadata["Job Description"],
-            "score": doc.metadata.get("score", "N/A")
+            "score": score  # include the actual similarity score
         }
-        for doc in results
+        for doc, score in results
     ]
 
 # --------------------------------------------
@@ -70,10 +70,10 @@ if __name__ == "__main__":
         build_vector_store()
 
     # Example search
-    query_title = "Director of Engineering"
-    reason = "This role aligns with technical leadership and executive experience"
+    query_title = "Technology Consultant - Healthcare"
+    reason = "This role aligns with experience in technology and healthcare. Advises on tech-driven improvements in healthcare systems."
     matches = search_similar_jobs(query_title, reason)
 
     print("Top matching job titles:")
     for m in matches:
-        print(f"- {m['Job Title']}: {m['Job Description']}")
+        print(f"- {m['Job Title']}: {m['Job Description']}: {m['score']}")
