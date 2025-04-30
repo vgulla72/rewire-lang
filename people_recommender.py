@@ -84,13 +84,14 @@ def find_people_transitions(input_data: PeopleSearchInput) -> PeopleSearchOutput
     for role in role_titles:
         # Build search query for this specific role
         query = (
-            f'site:linkedin.com/in "{previous_title}" & "{role}" & "{location}"'
+            f'site: linkedin.com/in {previous_title} AND {role} AND {location}'
         )
         
         st.write(f"Searching for: {role}")
-        print(f"Running Serper search with query: {query}")
+        st.write(f"Running Serper search with query: {query}")
         search_results = serper_search(query=query, num_results=10)  # Reduced to 10 per role to control API usage
-        
+
+        st.write(search_results)
         # Filter LinkedIn profiles
         linkedin_results = [item for item in search_results if "linkedin.com/in/" in item.get("link", "")]
         print(f"Found {len(linkedin_results)} LinkedIn profiles for {role}")

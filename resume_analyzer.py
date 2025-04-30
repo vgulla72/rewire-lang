@@ -31,7 +31,8 @@ class ResumeAnalyzer:
     def extract_structured_info(self, resume_text: str) -> StructuredResumeInfo:
         """Uses LLM to extract structured resume info."""
         prompt = f"""
-        Extract structured information from the following resume.
+        Extract structured information from the following resume and calculate total years of experience based on the work experience section.
+        Provide the output in the following format:
         {self.structured_parser.get_format_instructions()}
         Resume:
         {resume_text}
@@ -42,7 +43,7 @@ class ResumeAnalyzer:
     def infer_insights(self, resume_text: str) -> InferredProfileInsights:
         """Uses LLM to infer high-level insights."""
         prompt = f"""
-        Analyze the resume and provide insights:
+        Analyze the resume and provide insights
         {self.insight_parser.get_format_instructions()}
         Resume:
         {resume_text}

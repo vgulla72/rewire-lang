@@ -18,7 +18,7 @@ class StructuredResumeInfo(BaseModel):
     email: Optional[EmailStr]
     phone_number: Optional[str]
     education: List[EducationEntry]
-    location_state: Optional[str] # e.g., "WA"
+    location: Optional[str] # e.g., "Greater Seattle Area, WA"
     work_experience: List[ExperienceEntry]
     skills: List[str]
     certifications: List[str]
@@ -36,7 +36,6 @@ class InferredProfileInsights(BaseModel):
     personality_traits: List[str]  # e.g., ["Analytical", "Team Player"]
     workplace_likes: List[str]  # e.g., ["Remote Work", "Flexible Hours"]
     workplace_dislikes: List[str]  # e.g., ["Micromanagement", "Long Commutes"]
-    years_of_experience: Optional[int]  # e.g., 5
 
 
 

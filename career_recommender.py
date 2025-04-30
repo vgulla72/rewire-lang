@@ -46,8 +46,16 @@ def recommend_career_paths(input_data: CareerInput) -> CareerRecommendationsOutp
     format_instructions = career_parser.get_format_instructions()
 
     prompt = f"""
-    Based on the following structured resume info, inferred insights, career change reason, and hobbies/passions,
-    suggest 3-4 potential career paths. Suggest only official job titles and do not fabricate roles. Provide reasoning for each suggestion.
+    You are a career advisor AI recommending new career paths to a professional considering a transition. 
+    Use the structured resume info, inferred insights, career change reason, and personal interests below.
+
+    Recommend 3–4 potential career paths that:
+    - Are a strong fit for their background and goals
+    - Suggest official job titles** that are commonly found on LinkedIn and job boards  (e.g., if the recommended role is "Technology Consultant - Healthcare", suggest normalized title like "Technology Consultant")
+    - Are written to **maximize searchability and discoverability** when looking for people in those roles on LinkedIn
+    - Include a brief explanation of why each career path is a good fit
+
+    Do NOT simply restate the same job title unless it's already a highly normalized or widely used form.
 
     Structured Info:
     {input_data.structured_info}
