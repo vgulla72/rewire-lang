@@ -32,6 +32,19 @@ class ResumeAnalyzer:
         """Uses LLM to extract structured resume info."""
         prompt = f"""
         Extract structured information from the following resume and calculate total years of experience based on the work experience section.
+        Your task is to extract **structured information** from the following resume. If any field is missing, leave it blank or use null. Calculate total years of experience based on the work experience durations.
+
+        Extract **only** the following fields:
+        - full_name (string)
+        - email (string)
+        - phone_number (string or null)
+        - location (string)
+        - work_experience (list of objects: {{title, company, duration}})
+        - education (list of objects: {{degree, institution, graduation_year}})
+        - skills (list of strings)
+        - certifications (list of strings)  # Fixed: was "certification" in original
+        - total_years_experience (integer)
+
         Provide the output in the following format:
         {self.structured_parser.get_format_instructions()}
         Resume:
@@ -44,6 +57,17 @@ class ResumeAnalyzer:
         """Uses LLM to infer high-level insights."""
         prompt = f"""
         Analyze the resume and provide insights
+        Extract **only** the following fields:
+        - domain (string, e.g., "Data Science")
+        - industry (string, e.g., "Healthcare")
+        - seniority_level (string, e.g., "Mid-Level")
+        - role_type (string, e.g., "Individual Contributor")
+        - skills (list of strings, e.g., ["Python", "Machine Learning"])
+        - personality_traits (list of strings, e.g., ["Analytical", "Team Player"])
+        - workplace_likes (list of strings, e.g., ["Remote Work", "Flexible Hours"])
+        - workplace_dislikes (list of strings, e.g., ["Micromanagement", "Long Commutes"])
+       
+         Provide the output in the following format:
         {self.insight_parser.get_format_instructions()}
         Resume:
         {resume_text}

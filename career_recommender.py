@@ -2,26 +2,13 @@ from typing import List
 from pydantic import BaseModel
 from langchain.tools import tool
 from langchain.output_parsers import PydanticOutputParser
+from models import CareerInput, CareerRecommendationsOutput
 #from langchain.chat_models import ChatOpenAI
 from langchain_openai import ChatOpenAI
 import os
 
 api_key = os.getenv("OPENROUTER_API_KEY")
 
-# Pydantic model to structure input
-class CareerInput(BaseModel):
-    structured_info: dict
-    inferred_insights: dict
-    career_change_reason: str
-    hobbies_and_passions: str
-
-# Define output model
-class CareerRecommendation(BaseModel):
-    title: str
-    reason: str
-
-class CareerRecommendationsOutput(BaseModel):
-    career_recommendations: List[CareerRecommendation]
 
 # Instantiate LLM
 #llm = ChatOpenAI(temperature=0, model="gpt-4o")

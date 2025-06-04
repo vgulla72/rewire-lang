@@ -2,8 +2,7 @@ from langchain_openai import ChatOpenAI
 from langchain.schema import SystemMessage, HumanMessage
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel
-from career_recommender import CareerRecommendationsOutput, CareerInput
-from company_recommender import CompanyRecommendationsOutput, CompanyInput
+from models import PeopleSearchInput, PeopleSearchOutput, PersonExample, CareerRecommendation, CareerRecommendationsOutput, CompanyInput, CompanyRecommendation, CompanyRecommendationsOutput
 from resume_analyzer import ResumeAnalyzer
 from typing import List
 import streamlit as st
@@ -12,26 +11,6 @@ import os
 
 api_key = os.getenv("OPENROUTER_API_KEY")
 
-# Input Model
-class PeopleSearchInput(BaseModel):
-    previous_title: str
-    location: str
-    recommended_roles: CareerRecommendationsOutput
-    recommended_companies: CompanyRecommendationsOutput
-
-# -----------------------------
-# Output Models
-# -----------------------------
-class PersonExample(BaseModel):
-    name: str
-    previous_title: str
-    current_title: str
-    current_company: str
-    linkedin_profile: str
-    summary: str
-
-class PeopleSearchOutput(BaseModel):
-    matches: List[PersonExample]
 
 # LLM Setup
 #llm = ChatOpenAI(temperature=0.2, model="gpt-4o")
@@ -118,7 +97,7 @@ def find_people_transitions(input_data: PeopleSearchInput) -> PeopleSearchOutput
 
     format_instructions = parser.get_format_instructions()
 
-    system_msg = SystemMessage(content="""You are a career research assistant. Extract and filter only 3–5 people who likely match the job transition based on semantic similarity.
+    system_msg = SystemMessage(content="""You are a recruitment analyst tasked with reviewing LinkedIn profiles to identify candidates who have made specific career transitions based on semantic similarity and present the reasoning too.
     
 Your output must be valid JSON following the schema in the instructions. If you cannot extract sufficient information for at least one person, return a valid JSON with an empty matches array like this:
 ```json
@@ -141,11 +120,13 @@ You will be shown web search results (Title, Snippet, URL) that are mostly Linke
 
 Extract:
 - name
-- previous_title
-- current_title
+- previous work experience (title, company)
+- current_role and title
 - current_company
 - linkedin_profile (from URL)
 - summary (2-3 sentence career overview)
+- reasoning (why this person is a good match for the role)
+- Provide the output in the following format:
 
 {format_instructions}
 
@@ -189,16 +170,16 @@ if __name__ == "__main__":
         location="Seattle, WA",
         recommended_roles=CareerRecommendationsOutput(
             career_recommendations=[
-                CareerRecommendation(title="CTO", reason="Career progression"),
-                CareerRecommendation(title="VP of Engineering", reason="Career progression"),
+                CareerRecommendation(title="Fractional CTO", reason="Part-time leadership"),
+                CareerRecommendation(title="Supply Chain Advisor", reason="Consulting role"),
                 CareerRecommendation(title="Technology Consultant", reason="Alternative path")
             ]
         ),
-        recommended_companies=CompanyRecommendationsOutput(
-            company_recommendations=[
-                CompanyRecommendation(name="Tech Company", reason="Industry fit")
-            ]
-        )
+        #recommended_companies=CompanyRecommendationsOutput(
+        #    recommendations=[
+        #        CompanyRecommendation(company="Auger", category="Startup", reason="Industry fit")
+        #    ]
+        #)
     )
     
     # Run the search

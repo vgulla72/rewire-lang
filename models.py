@@ -1,5 +1,5 @@
 from pydantic import BaseModel, EmailStr
-from typing import List, Optional
+from typing import List, Optional, Literal
 from langchain.output_parsers import PydanticOutputParser
 
 
@@ -20,22 +20,68 @@ class StructuredResumeInfo(BaseModel):
     education: List[EducationEntry]
     location: Optional[str] # e.g., "Greater Seattle Area, WA"
     work_experience: List[ExperienceEntry]
-    skills: List[str]
     certifications: List[str]
     total_years_experience: Optional[int]
 
 class InferredProfileInsights(BaseModel):
     domain: str  # e.g., "Data Science"
     industry: str  # e.g., "Healthcare"
-    experience_level: str  # e.g., "Senior"
-    preferred_location: str  # e.g., "Greater Seattle Area, WA"
-    current_compensation_usd: Optional[int]  # e.g., 120000
-    estimated_compensation_usd: Optional[int]  # e.g., 130000
-    compensation_range_usd: str  # e.g., "$120,000 - $140,000"
+    seniority_level: str  # e.g., "Mid-Level"
     role_type: str  # e.g., "Individual Contributor"
+    skills: List[str]  # e.g., ["Python", "Machine Learning"]
     personality_traits: List[str]  # e.g., ["Analytical", "Team Player"]
     workplace_likes: List[str]  # e.g., ["Remote Work", "Flexible Hours"]
     workplace_dislikes: List[str]  # e.g., ["Micromanagement", "Long Commutes"]
 
+# Pydantic model to structure input
+class CareerInput(BaseModel):
+    structured_info: dict
+    inferred_insights: dict
+    career_change_reason: str
+    hobbies_and_passions: str
 
+# Define output model
+class CareerRecommendation(BaseModel):
+    title: str
+    reason: str
 
+class CareerRecommendationsOutput(BaseModel):
+    career_recommendations: List[CareerRecommendation]
+
+# Define input model
+class CompanyInput(BaseModel):
+    structured_info: dict
+    inferred_insights: dict
+    career_change_reason: str
+    hobbies_and_passions: str
+    career_recommendations: CareerRecommendationsOutput
+
+# Define output model
+class CompanyRecommendation(BaseModel):
+    company: str
+    category: str  # e.g., Non-Profit, For-Profit, Academia, Government
+    reason: str
+
+class CompanyRecommendationsOutput(BaseModel):
+    recommendations: List[CompanyRecommendation]
+
+# Input Model
+class PeopleSearchInput(BaseModel):
+    previous_title: str
+    location: str
+    recommended_roles: CareerRecommendationsOutput
+    recommended_companies: CompanyRecommendationsOutput
+
+# -----------------------------
+# Output Models
+# -----------------------------
+class PersonExample(BaseModel):
+    name: str
+    previous_title: str
+    current_title: str
+    current_company: str
+    linkedin_profile: str
+    summary: str
+
+class PeopleSearchOutput(BaseModel):
+    matches: List[PersonExample]

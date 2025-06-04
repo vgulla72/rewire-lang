@@ -2,13 +2,16 @@ import streamlit as st
 from resume_analyzer import ResumeAnalyzer
 import tempfile
 import os
-from career_recommender import recommend_career_paths, CareerInput
-from company_recommender import recommend_companies, CompanyInput
-from people_recommender import find_people_transitions, PeopleSearchInput
+from models import CareerInput, CareerRecommendationsOutput, PeopleSearchInput, CompanyInput, CompanyRecommendationsOutput, PeopleSearchOutput
+from career_recommender import recommend_career_paths
+#from career_crew import run_career_crew 
+from company_recommender import recommend_companies
+from people_recommender import find_people_transitions
+#from people_crew import find_people_transitions
 from langchain_openai import ChatOpenAI
 from langchain.tools import tool
 
-st.set_page_config(page_title="AI Resume Analyzer", layout="wide")
+st.set_page_config(page_title="RewireMe Career Co-pilot", layout="wide")
 st.title("📄 RewireMe")
 st.markdown("Upload a resume PDF and get structured information and insights.")
 
@@ -36,6 +39,7 @@ if submitted and uploaded_file:
             )
 
             st.success("✅ Resume successfully analyzed!")
+            
 
             st.subheader("🧾 Structured Resume Info")
             st.json(result["structured_info"])
@@ -61,16 +65,22 @@ if submitted and uploaded_file:
             career_recommendations = recommend_career_paths.invoke({
                 "input_data": career_input.model_dump()
             })
-            st.subheader("🚀 Career Recommendations")     
+           
+            st.subheader("🚀 Career Recommendations")    
+            st.write(type(career_recommendations)) 
+            
             st.write(career_recommendations)
+            print("Type of career_recommendations:", type(career_recommendations))
+            print("Is instance of CareerRecommendationsOutput:", isinstance(career_recommendations, CareerRecommendationsOutput))
+            print("Fields of career_recommendations:", career_recommendations.model_dump()) 
 
             # Call the company recommender tool
             company_input = CompanyInput(
                 structured_info=result["structured_info"],
-                inferred_insights=result["inferred_insights"],
+               inferred_insights=result["inferred_insights"],
                 career_change_reason=reason_for_change,
-                hobbies_and_passions=hobbies_input,
-                career_recommendations=career_recommendations
+               hobbies_and_passions=hobbies_input,
+               career_recommendations=career_recommendations
             )
             company_recommendations = recommend_companies.invoke({
                 "input_data": company_input.model_dump()

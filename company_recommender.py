@@ -4,26 +4,11 @@ from langchain.tools import tool
 from langchain.output_parsers import PydanticOutputParser
 #from langchain.chat_models import ChatOpenAI
 from langchain_openai import ChatOpenAI
-from career_recommender import CareerInput, CareerRecommendationsOutput
+from models import CareerInput, CareerRecommendationsOutput, CompanyInput, CompanyRecommendationsOutput, CompanyRecommendation, CareerRecommendation
 import os
 api_key = os.getenv("OPENROUTER_API_KEY")
 
-# Define input model
-class CompanyInput(BaseModel):
-    structured_info: dict
-    inferred_insights: dict
-    career_change_reason: str
-    hobbies_and_passions: str
-    career_recommendations: CareerRecommendationsOutput
 
-# Define output model
-class CompanyRecommendation(BaseModel):
-    company: str
-    category: str  # e.g., Non-Profit, For-Profit, Academia, Government
-    reason: str
-
-class CompanyRecommendationsOutput(BaseModel):
-    recommendations: List[CompanyRecommendation]
 
 # Instantiate LLM
 #llm = ChatOpenAI(temperature=0, model="gpt-4o")
@@ -58,9 +43,10 @@ def recommend_companies(input_data: CompanyInput) -> CompanyRecommendationsOutpu
     You are a company recommendation expert.
 
     Based on the structured resume info, inferred insights, career change reason, and hobbies/passions,
-    recommend companies or organizations (profit, non-profit, academia, govt) that regularly hire into roles in {formatted_recommendations} and explain why each is a fit.
-    Only recommend companies or organizations if they are known to regularly hire for the roles listed above.
-    Do NOT suggest companies that do not align with the recommended roles.
+    recommend companies that hire into roles in {formatted_recommendations} and explain why each is a fit.
+    Only recommend companies or organizations if they align with the work environment and cultural factors important to the user.
+    Recommend off the beaten path companies that are not commonly found on LinkedIn or job boards.
+    Include the work environment and cultural factors considered for each recommendation.
 
     STRUCTURED INFO:
     {input_data.structured_info}

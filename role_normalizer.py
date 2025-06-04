@@ -9,7 +9,7 @@ from langchain_community.vectorstores import FAISS
 # --------------------------------------------
 # CONFIG
 # --------------------------------------------
-DATA_PATH = "/Users/vasanthagullapalli/documents/rewireMe/new_jobs.csv"
+DATA_PATH = "/Users/vasanthagullapalli/documents/rewireMe/onet_job_titles_with_descriptions.csv"
 VECTOR_STORE_DIR = "/Users/vasanthagullapalli/documents/rewireMe/faiss_store"
 EMBED_MODEL_NAME = "text-embedding-3-small"
 
@@ -70,8 +70,8 @@ if __name__ == "__main__":
         build_vector_store()
 
     # Example search
-    query_title = "Technology Consultant - Healthcare"
-    reason = "This role aligns with experience in technology and healthcare. Advises on tech-driven improvements in healthcare systems."
+    query_title = "Director of Technology"
+    reason = "This role aligns with experience in technology and executive leadership. Manages large teams and oversees technology strategy."
     matches = search_similar_jobs(query_title, reason)
 
     print("Top matching job titles:")
