@@ -28,36 +28,58 @@ career_parser = PydanticOutputParser(pydantic_object=CareerRecommendationsOutput
 
 @tool
 def recommend_career_paths(input_data: CareerInput) -> CareerRecommendationsOutput:
-    """Recommend career paths based on resume and personal context."""
+    """Recommend private sector career transformations based on transferable skills, 
+    emerging industry trends, and adjacent market opportunities."""
 
     format_instructions = career_parser.get_format_instructions()
 
     prompt = f"""
-    You are a career advisor AI recommending new career paths to a professional considering a transition. 
-    Use the structured resume info, inferred insights, career change reason, and personal interests below.
+You are a radical career transition strategist specializing in identifying high-potential, 
+non-obvious private sector opportunities. Analyze this profile through multiple lenses:
 
-    Recommend 3–4 potential career paths that:
-    - Are a strong fit for their background and goals
-    - Suggest official job titles** that are commonly found on LinkedIn and job boards  (e.g., if the recommended role is "Technology Consultant - Healthcare", suggest normalized title like "Technology Consultant")
-    - Are written to **maximize searchability and discoverability** when looking for people in those roles on LinkedIn
-    - Include a brief explanation of why each career path is a good fit
+1. **Skill Adjacency**: What valuable adjacent roles exist just beyond their current domain?
+2. **Industry Convergence**: Where are emerging intersections between their expertise and growing sectors?
+3. **Future-Proofing**: What roles leverage both their experience AND future market trends?
+4. **Hidden Demand**: What niche positions are companies struggling to fill?
 
-    Do NOT simply restate the same job title unless it's already a highly normalized or widely used form.
+### Creative Framework to Apply:
+- "What if" scenarios (e.g., "What if their healthcare tech experience applied to climate tech?")
+- Emerging hybrid roles (e.g., "Product Manager + AI Ethicist")
+- Skills repackaging (e.g., "Regulatory expertise → Cannabis industry compliance officer")
 
-    Structured Info:
-    {input_data.structured_info}
+### Required Elements for Each Recommendation:
+- **Normalized Title**: Standard LinkedIn job title
+- **Industry Vertical**: Specific sector (e.g., FinTech, HealthTech)
+- **Why Fit**: Transferable skills with evidence from background
+- **Salary Range**: Current market rates
+- **Top 3 Trending Skills**: Must-have competencies
+- **Transition Plan**:
+  - 1 Essential certification
+  - 2 Strategic networking targets
+  - 1 Portfolio project idea
 
-    Inferred Insights:
-    {input_data.inferred_insights}
+### Current Industry Trends to Cross-Reference:
+- AI-Augmented Roles (e.g., "Prompt Engineering Manager")
+- Regulatory Tech Expansion (e.g., "Crypto Compliance Architect")
+- Sustainability-Driven Roles (e.g., "Carbon Accounting Specialist")
+- Fractional Executive Demand (e.g., "Part-Time CPO for Startups")
 
-    Career Change Reason:
-    {input_data.career_change_reason}
+### Profile Analysis:
+{input_data.structured_info}
 
-    Hobbies/Passions:
-    {input_data.hobbies_and_passions}
+### Inferred Superpowers:
+{input_data.inferred_insights}
 
-    {format_instructions}
-    """
+### Change Motivation:
+{input_data.career_change_reason}
+
+### Passion Indicators:
+{input_data.hobbies_and_passions}
+
+### Format Requirements:
+{format_instructions}
+
+"""
 
     response = llm.invoke(prompt)
     return career_parser.parse(response.content)

@@ -44,6 +44,10 @@ class CareerInput(BaseModel):
 class CareerRecommendation(BaseModel):
     title: str
     reason: str
+    compensation_range: Optional[str]  # e.g., "$80,000 - $120,000"
+    trending_skills: List[str]
+    suggested_training: List[str]
+    preparation_steps: List[str]
 
 class CareerRecommendationsOutput(BaseModel):
     career_recommendations: List[CareerRecommendation]

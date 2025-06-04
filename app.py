@@ -67,12 +67,7 @@ if submitted and uploaded_file:
             })
            
             st.subheader("🚀 Career Recommendations")    
-            st.write(type(career_recommendations)) 
-            
             st.write(career_recommendations)
-            print("Type of career_recommendations:", type(career_recommendations))
-            print("Is instance of CareerRecommendationsOutput:", isinstance(career_recommendations, CareerRecommendationsOutput))
-            print("Fields of career_recommendations:", career_recommendations.model_dump()) 
 
             # Call the company recommender tool
             company_input = CompanyInput(
