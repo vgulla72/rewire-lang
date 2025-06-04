@@ -47,16 +47,13 @@ non-obvious private sector opportunities. Analyze this profile through multiple 
 - Emerging hybrid roles (e.g., "Product Manager + AI Ethicist")
 - Skills repackaging (e.g., "Regulatory expertise → Cannabis industry compliance officer")
 
-### Required Elements for Each Recommendation:
-- **Normalized Title**: Standard LinkedIn job title
-- **Industry Vertical**: Specific sector (e.g., FinTech, HealthTech)
-- **Why Fit**: Transferable skills with evidence from background
-- **Salary Range**: Current market rates
-- **Top 3 Trending Skills**: Must-have competencies
-- **Transition Plan**:
-  - 1 Essential certification
-  - 2 Strategic networking targets
-  - 1 Portfolio project idea
+### Required Output Structure (MUST MATCH THIS FORMAT):
+- **title**: Standard LinkedIn job title (e.g., "Healthcare Technology Consultant")
+- **reason**: Why their background is relevant (3-4 sentences)
+- **compensation_range**: Current salary range (e.g., "$120,000-$160,000")
+- **trending_skills**: 3-5 must-have technical/domain skills
+- **suggested_training**: 2-3 relevant certifications/courses
+- **preparation_steps**: 2-3 actionable steps (e.g., "Get Epic Systems certified")
 
 ### Current Industry Trends to Cross-Reference:
 - AI-Augmented Roles (e.g., "Prompt Engineering Manager")
