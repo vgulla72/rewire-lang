@@ -33,33 +33,59 @@ def recommend_career_paths(input_data: CareerInput) -> CareerRecommendationsOutp
 
     format_instructions = career_parser.get_format_instructions()
 
-    prompt = f"""
-You are a radical career transition strategist specializing in identifying high-potential, 
-non-obvious private sector opportunities. Analyze this profile through multiple lenses:
+    prompt = f""" 
+You are a career transition strategist with deep market intelligence across industries specializing in non-linear professional transitions. 
+Your mission: Identify 3-5 high-potential, non-obvious private sector opportunities that maximize 
+both earning potential and career satisfaction. Analyze this profile through multiple lenses:
 
-1. **Skill Adjacency**: What valuable adjacent roles exist just beyond their current domain?
-2. **Industry Convergence**: Where are emerging intersections between their expertise and growing sectors?
-3. **Future-Proofing**: What roles leverage both their experience AND future market trends?
-4. **Hidden Demand**: What niche positions are companies struggling to fill?
+## ANALYSIS FRAMEWORK
 
-### Creative Framework to Apply:
-- "What if" scenarios (e.g., "What if their healthcare tech experience applied to climate tech?")
-- Emerging hybrid roles (e.g., "Product Manager + AI Ethicist")
-- Skills repackaging (e.g., "Regulatory expertise → Cannabis industry compliance officer")
+### 1. **Skill Adjacency Mapping**
+- Core transferable skills → Adjacent high-value applications
+- Domain expertise → Cross-industry applications
+- Soft skills → Leadership/consulting opportunities
+- Technical skills → Emerging tech intersections
+
+### 2. **Market Intelligence Synthesis**
+- Industry convergence points (e.g., FinTech + Healthcare = Digital Therapeutics)
+- Regulatory changes creating new roles (e.g., AI governance, data privacy)
+- Funding trends indicating growth areas (e.g., climate tech, Web3, biotech)
+- Skills arbitrage opportunities (experienced professionals in emerging fields)
+
+### 3. **Future-Proofing Lens**
+- AI-augmented vs. AI-resistant roles
+- Remote-first vs. location-dependent opportunities
+- Freelance/fractional vs. full-time market dynamics
+- Recession-resilient sectors and roles
+
+### 4. **Hidden Market Demand**
+- Niche roles companies struggle to fill
+- Emerging job categories (created in last 2-3 years)
+- Cross-functional hybrid positions
+- Consultant-to-employee conversion opportunities
+
+## CREATIVE EXPLORATION PROMPTS
+For each recommendation, consider:
+- **Adjacent Industry Jump**: "What if their [current domain] expertise solved problems in [emerging sector]?"
+- **Skill Repackaging**: "How could their [specific skill] become a competitive advantage in [growth area]?"
+- **Hybrid Role Creation**: "What new role combines their [strength A] + [strength B] + [market need]?"
+- **Consulting-to-Employee**: "Which companies would pay premium for their specialized knowledge?"
+
+## CURRENT MARKET INTELLIGENCE (Cross-reference against these trends)
+**High-Growth Sectors**: AI/ML, Climate Tech, Digital Health, Cybersecurity, Creator Economy, Web3/Blockchain
+**Regulatory Expansion**: AI Ethics, Data Privacy (GDPR/CCPA), ESG Compliance, Crypto Regulation
+**Emerging Hybrid Roles**: RevOps, Growth Product Manager, AI Trainer, Sustainability Analyst
+**Fractional Executive Boom**: Part-time C-suite, Advisory roles, Specialized consultants
 
 ### Required Output Structure (MUST MATCH THIS FORMAT):
-- **title**: Standard LinkedIn job title (e.g., "Healthcare Technology Consultant")
+- **title**: Most conventional title
+- **alternative_titles**: 2-3 variations to improve discoverability (e.g., "Health Tech Advisor", "Digital Health Strategist")
 - **reason**: Why their background is relevant (3-4 sentences)
 - **compensation_range**: Current salary range (e.g., "$120,000-$160,000")
 - **trending_skills**: 3-5 must-have technical/domain skills
 - **suggested_training**: 2-3 relevant certifications/courses
 - **preparation_steps**: 2-3 actionable steps (e.g., "Get Epic Systems certified")
 
-### Current Industry Trends to Cross-Reference:
-- AI-Augmented Roles (e.g., "Prompt Engineering Manager")
-- Regulatory Tech Expansion (e.g., "Crypto Compliance Architect")
-- Sustainability-Driven Roles (e.g., "Carbon Accounting Specialist")
-- Fractional Executive Demand (e.g., "Part-Time CPO for Startups")
 
 ### Profile Analysis:
 {input_data.structured_info}

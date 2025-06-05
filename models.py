@@ -43,6 +43,7 @@ class CareerInput(BaseModel):
 # Define output model
 class CareerRecommendation(BaseModel):
     title: str
+    alternative_titles: List[str]  # e.g., ["Technology Consultant", "Startup Advisor"]
     reason: str
     compensation_range: Optional[str]  # e.g., "$80,000 - $120,000"
     trending_skills: List[str]
