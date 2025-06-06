@@ -42,6 +42,7 @@ class CareerInput(BaseModel):
 
 # Define output model
 class CareerRecommendation(BaseModel):
+    category: Literal['Private', 'Public', 'Academia', 'Nonprofit']
     title: str
     alternative_titles: List[str]  # e.g., ["Technology Consultant", "Startup Advisor"]
     reason: str

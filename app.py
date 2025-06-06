@@ -65,9 +65,14 @@ if submitted and uploaded_file:
             career_recommendations = recommend_career_paths.invoke({
                 "input_data": career_input.model_dump()
             })
-           
             st.subheader("🚀 Career Recommendations")    
             st.write(career_recommendations)
+            #st.write("-----------")
+            #st.subheader("🔍 Career Recommendations (Detailed View)")
+            #career_recommendations_full = recommend_all_careers.invoke({
+            #    "input_data": career_input.model_dump()
+            #})
+            #st.write(career_recommendations_full)
 
             # Call the company recommender tool
             company_input = CompanyInput(

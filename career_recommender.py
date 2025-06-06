@@ -28,56 +28,76 @@ career_parser = PydanticOutputParser(pydantic_object=CareerRecommendationsOutput
 
 @tool
 def recommend_career_paths(input_data: CareerInput) -> CareerRecommendationsOutput:
-    """Recommend private sector career transformations based on transferable skills, 
-    emerging industry trends, and adjacent market opportunities."""
+    """Recommend career transformations across all sectors (private, public, academia, nonprofit) 
+    based on transferable skills and market opportunities."""
 
     format_instructions = career_parser.get_format_instructions()
 
     prompt = f""" 
-You are a career transition strategist with deep market intelligence across industries specializing in non-linear professional transitions. 
-Your mission: Identify 3-5 high-potential, non-obvious private sector opportunities that maximize 
-both earning potential and career satisfaction. Analyze this profile through multiple lenses:
+You are a career transition strategist with deep market intelligence and expertise across private, public, academia, nonprofit sectors specializing in non-linear professional transitions. 
+Your mission: Identify 5-7 high-potential, non-obvious opportunities that maximize career satisfaction. Analyze this profile through multiple lenses:
 
-## ANALYSIS FRAMEWORK
+For each sector, analyze through these lenses:
+- **Private Sector**: Corporate roles, startups, consulting, fractional executive positions
+- **Public Sector**: Government, policy, civil service, regulatory roles
+- **Academia**: Research, teaching, administration, edtech
+- **Nonprofit**: Social impact, advocacy, fundraising, program management
 
-### 1. **Skill Adjacency Mapping**
-- Core transferable skills → Adjacent high-value applications
-- Domain expertise → Cross-industry applications
-- Soft skills → Leadership/consulting opportunities
-- Technical skills → Emerging tech intersections
+### 2. **Cross-Sector Skill Translation**
+- Identify how core skills transfer differently across sectors
+- Highlight sector-specific value propositions for the candidate's background
+- Note any certifications or training needed for sector transitions
 
-### 2. **Market Intelligence Synthesis**
-- Industry convergence points (e.g., FinTech + Healthcare = Digital Therapeutics)
-- Regulatory changes creating new roles (e.g., AI governance, data privacy)
-- Funding trends indicating growth areas (e.g., climate tech, Web3, biotech)
-- Skills arbitrage opportunities (experienced professionals in emerging fields)
+### 3. **Compensation & Lifestyle Factors**
+- Compare earning potential across sectors
+- Consider stability vs. growth tradeoffs
+- Evaluate work-life balance considerations
 
-### 3. **Future-Proofing Lens**
-- AI-augmented vs. AI-resistant roles
-- Remote-first vs. location-dependent opportunities
-- Freelance/fractional vs. full-time market dynamics
-- Recession-resilient sectors and roles
+### 4. **Impact Potential**
+- Map opportunities to candidate's change motivation and passions
+- Identify roles with highest alignment to personal values
 
-### 4. **Hidden Market Demand**
-- Niche roles companies struggle to fill
-- Emerging job categories (created in last 2-3 years)
-- Cross-functional hybrid positions
-- Consultant-to-employee conversion opportunities
+## SECTOR-SPECIFIC TRENDS (2024)
+
+**Private Sector Trends**:
+- AI integration across business functions
+- Growth of hybrid tech/business roles
+- Specialized consulting in regulatory changes
+
+**Public Sector Trends**:
+- Digital transformation in government
+- Climate policy implementation roles
+- Cybersecurity in public infrastructure
+
+**Academic Trends**:
+- Interdisciplinary research growth
+- Edtech and digital learning innovation
+- Science communication roles
+
+**Nonprofit Trends**:
+- Data-driven impact measurement
+- Corporate partnership roles
+- Policy advocacy in tech regulation
 
 ## CREATIVE EXPLORATION PROMPTS
 For each recommendation, consider:
+- **Sector Transition**: "How could their skills solve problems differently in [sector]?"
+- **Impact Multiplier**: "Which roles would amplify both their skills and desired impact?"
+- **Compensation Strategy**: "What roles offer the best reward for their unique skill mix?"
 - **Adjacent Industry Jump**: "What if their [current domain] expertise solved problems in [emerging sector]?"
 - **Skill Repackaging**: "How could their [specific skill] become a competitive advantage in [growth area]?"
 - **Hybrid Role Creation**: "What new role combines their [strength A] + [strength B] + [market need]?"
 - **Consulting-to-Employee**: "Which companies would pay premium for their specialized knowledge?"
-
-## CURRENT MARKET INTELLIGENCE (Cross-reference against these trends)
-**High-Growth Sectors**: AI/ML, Climate Tech, Digital Health, Cybersecurity, Creator Economy, Web3/Blockchain
-**Regulatory Expansion**: AI Ethics, Data Privacy (GDPR/CCPA), ESG Compliance, Crypto Regulation
-**Emerging Hybrid Roles**: RevOps, Growth Product Manager, AI Trainer, Sustainability Analyst
-**Fractional Executive Boom**: Part-time C-suite, Advisory roles, Specialized consultants
+- **Nonprofit Innovation**: "How could their [skill] drive change in [social issue]?"
+- **Academic-to-Industry**: "What industry roles value their research expertise?"
+- **Public Sector Innovation**: "How could their [skill] transform public services in [area]?"
+- **Startup Opportunities**: "What gaps in [industry] could they fill with their unique background?"
+- **Fractional Executive Roles**: "What companies need their expertise on a part-time basis?"
+- **Remote Work Trends**: "How can their skills adapt to the growing remote work landscape?"
+- **Gig Economy Roles**: "What freelance opportunities align with their expertise?"
 
 ### Required Output Structure (MUST MATCH THIS FORMAT):
+- **category**: Sector (Private/Public/Academia/Nonprofit)
 - **title**: Most conventional title
 - **alternative_titles**: 2-3 variations to improve discoverability (e.g., "Health Tech Advisor", "Digital Health Strategist")
 - **reason**: Why their background is relevant (3-4 sentences)
@@ -85,7 +105,6 @@ For each recommendation, consider:
 - **trending_skills**: 3-5 must-have technical/domain skills
 - **suggested_training**: 2-3 relevant certifications/courses
 - **preparation_steps**: 2-3 actionable steps (e.g., "Get Epic Systems certified")
-
 
 ### Profile Analysis:
 {input_data.structured_info}
