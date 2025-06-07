@@ -56,7 +56,7 @@ class ResumeAnalyzer:
     def infer_insights(self, resume_text: str) -> InferredProfileInsights:
         """Uses LLM to infer high-level insights."""
         prompt = f"""
-        Analyze the resume and provide insights
+        Analyze the resume and infer insights based on the professional journey, roles, and skills. Your task is to infer high-level insights about the candidate's profile.
         Extract **only** the following fields:
         - domain (string, e.g., "Data Science")
         - industry (string, e.g., "Healthcare")
@@ -87,6 +87,6 @@ class ResumeAnalyzer:
 
 if __name__ == "__main__":
     analyzer = ResumeAnalyzer(model_name="deepseek/deepseek-chat-v3-0324:free")  # Use correct model name
-    file_path = "/Users/vasanthagullapalli/Documents/Vasantha Gullapalli Resume.pdf"
+    file_path = "/Users/vasanthagullapalli/Downloads/Profile.pdf"
     result = analyzer.analyze(file_path)
     print(result)

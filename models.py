@@ -4,14 +4,14 @@ from langchain.output_parsers import PydanticOutputParser
 
 
 class EducationEntry(BaseModel):
-    degree: str
+    degree: Optional[str] = None
     institution: str
-    graduation_year: Optional[str]
+    graduation_year: Optional[str] = None  # e.g., "2020", "Expected 2025"
 
 class ExperienceEntry(BaseModel):
     title: str
     company: str
-    duration: Optional[str]
+    duration: Optional[str] = None
 
 class StructuredResumeInfo(BaseModel):
     full_name: Optional[str]

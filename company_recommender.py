@@ -38,13 +38,14 @@ def recommend_companies(input_data: CompanyInput) -> CompanyRecommendationsOutpu
         f"- {rec.title}: {rec.reason}"
         for rec in input_data.career_recommendations.career_recommendations
     ])
+    preferred_location = input_data.structured_info.get("location", "anywhere")
 
     prompt = f"""
     You are a company recommendation expert.
 
     Based on the structured resume info, inferred insights, career change reason, and hobbies/passions,
     recommend companies that hire into roles in {formatted_recommendations} and explain why each is a fit.
-    Only recommend companies or organizations if they align with the work environment and cultural factors important to the user.
+    Only recommend companies or organizations if they align with the work environment and cultural factors important to the user and located in {preferred_location}.
     Recommend off the beaten path companies that are not commonly found on LinkedIn or job boards.
     Include the work environment and cultural factors considered for each recommendation.
 

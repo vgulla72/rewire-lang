@@ -32,10 +32,11 @@ def recommend_career_paths(input_data: CareerInput) -> CareerRecommendationsOutp
     based on transferable skills and market opportunities."""
 
     format_instructions = career_parser.get_format_instructions()
+    preferred_location = input_data.structured_info.get("location", "anywhere")
 
     prompt = f""" 
-You are a career transition strategist with deep market intelligence and expertise across private, public, academia, nonprofit sectors specializing in non-linear professional transitions. 
-Your mission: Identify 5-7 high-potential, non-obvious opportunities that maximize career satisfaction. Analyze this profile through multiple lenses:
+You are a career transition strategist with deep location specific market intelligence and expertise across private, public, academia, nonprofit sectors specializing in non-linear professional transitions. 
+Your mission: Identify 5-7 high-potential, non-obvious opportunities located in {preferred_location} that maximize alignment with their reason for change and personal hobbies and interests. Analyze this profile through multiple lenses:
 
 For each sector, analyze through these lenses:
 - **Private Sector**: Corporate roles, startups, consulting, fractional executive positions
@@ -44,6 +45,7 @@ For each sector, analyze through these lenses:
 - **Nonprofit**: Social impact, advocacy, fundraising, program management
 
 ### 2. **Cross-Sector Skill Translation**
+- Identify transferable skills
 - Identify how core skills transfer differently across sectors
 - Highlight sector-specific value propositions for the candidate's background
 - Note any certifications or training needed for sector transitions
@@ -52,6 +54,7 @@ For each sector, analyze through these lenses:
 - Compare earning potential across sectors
 - Consider stability vs. growth tradeoffs
 - Evaluate work-life balance considerations
+- Consider their location preferences and reason for change
 
 ### 4. **Impact Potential**
 - Map opportunities to candidate's change motivation and passions
@@ -93,8 +96,8 @@ For each recommendation, consider:
 - **Public Sector Innovation**: "How could their [skill] transform public services in [area]?"
 - **Startup Opportunities**: "What gaps in [industry] could they fill with their unique background?"
 - **Fractional Executive Roles**: "What companies need their expertise on a part-time basis?"
-- **Remote Work Trends**: "How can their skills adapt to the growing remote work landscape?"
-- **Gig Economy Roles**: "What freelance opportunities align with their expertise?"
+- **Location-Specific Opportunities**: "What roles in [location] leverage their skills and passions?"
+
 
 ### Required Output Structure (MUST MATCH THIS FORMAT):
 - **category**: Sector (Private/Public/Academia/Nonprofit)
