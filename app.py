@@ -7,6 +7,7 @@ from career_recommender import recommend_career_paths
 #from career_crew import run_career_crew 
 from company_recommender import recommend_companies
 from sector_recommender import recommend_sectors
+from sector_analyzer import analyze_sectors
 from people_recommender import find_people_transitions
 #from people_crew import find_people_transitions
 from langchain_openai import ChatOpenAI
@@ -69,12 +70,18 @@ if submitted and uploaded_file:
             st.subheader("🌐 Sector Recommendations")   
             st.write(sector_recommendations)
             #st.write("-----------")
-            
-            career_recommendations = recommend_career_paths.invoke({
-                "input_data": career_input.model_dump()
+            for sector in sector_recommendations.sectorrecommendations:
+                st.write(f"**Sector:** {sector.sector}")
+                sector_analysis = analyze_sectors(sector.sector)
+                # Ensure sector_analysis is a List[str]
+                if isinstance(sector_analysis, str):
+                    sector_analysis = [sector_analysis]  # Convert to list if needed
+                career_recommendations = recommend_career_paths.invoke({
+                "input_data": career_input.model_dump(),
+                "sector": sector.sector,  # Pass the sector name (str)
+                "sector_analysis": sector_analysis  # Pass as List[str]
             })
-            st.subheader("🚀 Career Recommendations")    
-            st.write(career_recommendations)
+                st.write(career_recommendations)
             #st.write("-----------")
             #st.subheader("🔍 Career Recommendations (Detailed View)")
             #career_recommendations_full = recommend_all_careers.invoke({

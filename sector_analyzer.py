@@ -32,7 +32,7 @@ def analyze_sectors(sector: str) -> str:
     to be able to recommend roles based on individual profiles and interests."""
 
 
-    prompt = f""" Add commentMore actions
+    prompt = f""" 
 Act as a Career and Labor Market Trends Analyst. Generate a detailed, evidence-based report on the key trends, disruptions, and opportunities that will shape job markets in the {sector} over the next 3-5 years:
 
 ## ANALYSIS FRAMEWORK
