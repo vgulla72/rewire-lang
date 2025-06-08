@@ -2,10 +2,11 @@ import streamlit as st
 from resume_analyzer import ResumeAnalyzer
 import tempfile
 import os
-from models import CareerInput, CareerRecommendationsOutput, PeopleSearchInput, CompanyInput, CompanyRecommendationsOutput, PeopleSearchOutput
+from models import CareerInput, CareerRecommendationsOutput, PeopleSearchInput, CompanyInput, CompanyRecommendationsOutput, PeopleSearchOutput, SectorRecommendationsOutput
 from career_recommender import recommend_career_paths
 #from career_crew import run_career_crew 
 from company_recommender import recommend_companies
+from sector_recommender import recommend_sectors
 from people_recommender import find_people_transitions
 #from people_crew import find_people_transitions
 from langchain_openai import ChatOpenAI
@@ -62,6 +63,13 @@ if submitted and uploaded_file:
                 career_change_reason=reason_for_change,
                 hobbies_and_passions=hobbies_input
             )
+            sector_recommendations = recommend_sectors.invoke({
+                "input_data": career_input.model_dump()
+            })
+            st.subheader("🌐 Sector Recommendations")   
+            st.write(sector_recommendations)
+            #st.write("-----------")
+            
             career_recommendations = recommend_career_paths.invoke({
                 "input_data": career_input.model_dump()
             })

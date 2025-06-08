@@ -87,6 +87,6 @@ class ResumeAnalyzer:
 
 if __name__ == "__main__":
     analyzer = ResumeAnalyzer(model_name="deepseek/deepseek-chat-v3-0324:free")  # Use correct model name
-    file_path = "/Users/vasanthagullapalli/Downloads/Profile.pdf"
+    file_path = "/Users/vasanthagullapalli/Downloads/Hemant.pdf"
     result = analyzer.analyze(file_path)
     print(result)
