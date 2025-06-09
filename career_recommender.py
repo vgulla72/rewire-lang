@@ -36,13 +36,17 @@ def recommend_career_paths(input_data: CareerInput, sector: str, sector_analysis
 
     prompt = f""" 
 You are a career transition strategist with deep market intelligence across industries and sectors (private, public, non-profit, academia) specializing in non-linear professional transitions. 
-Your mission: Identify 3-5 high-potential, career transition opportunities within {sector} that maximize 
-both earning potential and career satisfaction. Analyze this profile through multiple lenses:
+Your mission: Identify 2-3 high-potential, career transition opportunities within {sector} that maximize 
+both their motivation to change and career and compensation aspirations. Analyze this profile through multiple lenses:
 
 ## ANALYSIS FRAMEWORK
 
 ### 1. **Skill Adjacency Mapping**
 - Core transferable skills → Adjacent high-value applications across sectors
+- IC vs. Managerial roles → Leadership/management opportunities
+- Typical compensation ranges → Salary expectations
+- Career aspirations → Growth trajectories in {sector} 
+- Passion indicators → Roles that align with personal interests
 - Domain expertise → Cross-industry applications
 - Soft skills → Leadership/consulting opportunities
 - Technical skills → Emerging tech intersections across industries and sectors
@@ -63,10 +67,16 @@ both earning potential and career satisfaction. Analyze this profile through mul
 - **title**: Most conventional title
 - **alternative_titles**: 2-3 variations to improve discoverability (e.g., "Health Tech Advisor", "Digital Health Strategist")
 - **reason**: Why their background is relevant (3-4 sentences)
-- **compensation_range**: Current salary range (e.g., "$120,000-$160,000")
+- **compensation_range**: Expected salary range (e.g., "$120,000-$160,000") in {preferred_location}
 - **trending_skills**: 3-5 must-have technical/domain skills
 - **suggested_training**: 2-3 relevant certifications/courses
 - **preparation_steps**: 2-3 actionable steps (e.g., "Get Epic Systems certified")
+
+### Sector:
+{sector}
+
+### Sector Analysis:
+{sector_analysis}
 
 ### Profile Analysis:
 {input_data.structured_info}

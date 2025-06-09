@@ -2,7 +2,7 @@ import streamlit as st
 from resume_analyzer import ResumeAnalyzer
 import tempfile
 import os
-from models import CareerInput, CareerRecommendationsOutput, PeopleSearchInput, CompanyInput, CompanyRecommendationsOutput, PeopleSearchOutput, SectorRecommendationsOutput
+from models import CareerInput, CareerRecommendation, CareerRecommendationsOutput, PeopleSearchInput, CompanyInput, CompanyRecommendationsOutput, PeopleSearchOutput, SectorRecommendationsOutput
 from career_recommender import recommend_career_paths
 #from career_crew import run_career_crew 
 from company_recommender import recommend_companies
@@ -70,19 +70,26 @@ if submitted and uploaded_file:
             st.subheader("🌐 Sector Recommendations")   
             st.write(sector_recommendations)
             #st.write("-----------")
+            # Initialize an empty list before the loop
+            all_career_recommendations = []
+
             for sector in sector_recommendations.sectorrecommendations:
                 st.write(f"**Sector:** {sector.sector}")
                 sector_analysis = analyze_sectors(sector.sector)
-                # Ensure sector_analysis is a List[str]
                 if isinstance(sector_analysis, str):
-                    sector_analysis = [sector_analysis]  # Convert to list if needed
-                career_recommendations = recommend_career_paths.invoke({
+                    sector_analysis = [sector_analysis]
+                raw_response = recommend_career_paths.invoke({
                 "input_data": career_input.model_dump(),
-                "sector": sector.sector,  # Pass the sector name (str)
-                "sector_analysis": sector_analysis  # Pass as List[str]
-            })
-                st.write(career_recommendations)
-
+                "sector": sector.sector,
+                "sector_analysis": sector_analysis
+                })
+                try:
+                    parsed_recommendations = CareerRecommendationsOutput.model_validate(raw_response)
+                    st.write(parsed_recommendations)
+                    all_career_recommendations.extend(parsed_recommendations.career_recommendations)
+                except Exception as e:
+                    st.error(f"❌ Failed to parse career recommendations: {e}")
+           
             # Call the company recommender tool
             #company_input = CompanyInput(
             #    structured_info=result["structured_info"],
@@ -102,7 +109,7 @@ if submitted and uploaded_file:
             people_input = PeopleSearchInput(
             previous_title=result["structured_info"].get("work_experience", [{}])[0].get("title", ""),
             location=result["structured_info"].get("location", ""),
-            recommended_roles=career_recommendations
+            recommended_roles=CareerRecommendationsOutput(career_recommendations=all_career_recommendations)
             )
             people_recommendations = find_people_transitions(people_input)
             st.subheader("🚀 People Recommendations")

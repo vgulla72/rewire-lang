@@ -63,7 +63,7 @@ def find_people_transitions(input_data: PeopleSearchInput) -> PeopleSearchOutput
     for role in role_titles:
         # Build search query for this specific role
         query = (
-            f'site: linkedin.com/in {previous_title} AND {role} AND {location}'
+            f'site: linkedin.com/in {role} AND {previous_title} AND {location}'
         )
         
         st.write(f"Searching for: {role}")
@@ -94,39 +94,51 @@ def find_people_transitions(input_data: PeopleSearchInput) -> PeopleSearchOutput
         f"""Title: {item.get('title')}\nSnippet: {item.get('description')}\nURL: {item.get('link')}"""
         for item in all_linkedin_results
     ])
-
     format_instructions = parser.get_format_instructions()
-
-    system_msg = SystemMessage(content="""You are a talent management expert tasked with reviewing LinkedIn profiles to identify candidates who have made specific career transitions and are successful at it.
-    
-Your output must be valid JSON following the schema in the instructions. If you cannot extract sufficient information for at least one person, return a valid JSON with an empty matches array like this:
-```json
-{
-  "matches": []
-}
-```
-
-Do not provide explanations outside of the JSON structure. If some information is missing, use reasonable inference from context or use "Unknown" as placeholder.""")
 
     # Combine all target roles for the LLM prompt
     target_roles_query = ", ".join(role_titles)
+
+    system_msg = SystemMessage(content="""You are a talent management expert specializing in identifying successful career transitions. Your task is to analyze LinkedIn profiles to find people who have made specific career changes similar to what the user is seeking.
+
+    Key criteria for a good match:
+    1. Clear evidence of transition from a role similar to the user's previous position
+    2. Demonstrated success in one of the target roles (measured by tenure, promotions, or achievements)
+    3. Logical progression in their career path that makes sense for the transition
+
+    For each potential match, you must identify:
+    - The transition pattern (how they moved between roles)
+    - Evidence of success in the new role (duration, accomplishments, etc.)
+    - Relevance to the user's desired transition
+
+    Output requirements:
+    - Only include profiles where you can clearly identify the career transition
+    - Must be valid JSON following the schema exactly
+    - If no strong matches exist, return empty matches array
+    - Never invent information - use "Unknown" for missing data
+
+    Common patterns to look for:
+    - Title changes showing progression
+    - Company changes with role upgrades
+    - Lateral moves with increased responsibility
+    - Industry shifts with transferable skills""")
     
     human_prompt = f"""
-You will be shown web search results (Title, Snippet, URL) that are  LinkedIn profiles. Review their linkedin profile pages and identify individuals who satisfy the following:
+    Analyze these LinkedIn profiles to find people who have successfully transitioned from roles like "{previous_title}" to one of these target roles: "{target_roles_query}" in {location}.
 
-1. Previous role similar to: "{previous_title}"
-2. Current role similar to one of: "{target_roles_query}"
-3. Located in or around: "{location}"
+    For each profile, evaluate:
+    1. Career Progression: Does their work history show a clear transition path?
+    2. Role Fit: Does their current role match one of our target roles?
+    3. Success Indicators: Have they been in the role >1 year? Any promotions/achievements mentioned?
+    4. Location: Are they based in or near {location}?
 
-Extract:
-- name
-- previous work experience (title, company)
-- current_role and title
-- current_company
-- linkedin_profile (from URL)
-- summary (2-3 sentence career overview)
-- reasoning (why this person is a good match for the role)
-- Provide the output in the following format:
+    Required output for each match:
+    - Name (from title if not in snippet)
+    - Previous role details (title + company)
+    - Current role details (title + company)
+    - LinkedIn URL
+    - Brief career summary highlighting the transition
+    - Reasoning explaining why this is a good example of the desired transition
 
 {format_instructions}
 
