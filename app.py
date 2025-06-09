@@ -82,34 +82,27 @@ if submitted and uploaded_file:
                 "sector_analysis": sector_analysis  # Pass as List[str]
             })
                 st.write(career_recommendations)
-            #st.write("-----------")
-            #st.subheader("🔍 Career Recommendations (Detailed View)")
-            #career_recommendations_full = recommend_all_careers.invoke({
-            #    "input_data": career_input.model_dump()
-            #})
-            #st.write(career_recommendations_full)
 
             # Call the company recommender tool
-            company_input = CompanyInput(
-                structured_info=result["structured_info"],
-               inferred_insights=result["inferred_insights"],
-                career_change_reason=reason_for_change,
-               hobbies_and_passions=hobbies_input,
-               career_recommendations=career_recommendations
-            )
-            company_recommendations = recommend_companies.invoke({
-                "input_data": company_input.model_dump()
-            })
-            st.subheader("🚀 Company Recommendations")     
-            st.write(company_recommendations)
+            #company_input = CompanyInput(
+            #    structured_info=result["structured_info"],
+            #   inferred_insights=result["inferred_insights"],
+            #    career_change_reason=reason_for_change,
+            #   hobbies_and_passions=hobbies_input,
+            #   career_recommendations=career_recommendations
+            #)
+            #company_recommendations = recommend_companies.invoke({
+            #   "input_data": company_input.model_dump()
+            #})
+            #st.subheader("🚀 Company Recommendations")     
+            #st.write(company_recommendations)
             
             # Call the people recommender tool
             st.subheader("🔍 People Search")
             people_input = PeopleSearchInput(
             previous_title=result["structured_info"].get("work_experience", [{}])[0].get("title", ""),
             location=result["structured_info"].get("location", ""),
-            recommended_roles=career_recommendations,
-            recommended_companies=company_recommendations,
+            recommended_roles=career_recommendations
             )
             people_recommendations = find_people_transitions(people_input)
             st.subheader("🚀 People Recommendations")

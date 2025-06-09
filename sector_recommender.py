@@ -36,11 +36,11 @@ def recommend_sectors(input_data: CareerInput) -> SectorRecommendationsOutput:
 
     prompt = f""" 
 You are a career transition strategist with deep market intelligence across industries and sectors (private, public, non-profit, academia) specializing in non-linear professional transitions. 
-Your mission: Identify sectors to focus on that mostly align with {career_change_reason} and maximize 
+Your mission: Identify maximum of 2 sectors that mostly align with {career_change_reason} and maximize 
 both earning potential and career satisfaction. 
 
 - Consider the candidate's transferable skills, inferred insights, and career change motivations.
-- Suggest only sectors that are best suited for the candidate's profile, considering their skills, domain, motivations, and market trends.
+- Suggest 1-2 sectors that are best suited for the candidate's profile, considering their skills, domain, motivations, and market trends.
 
 
 ### Required Output Structure (MUST MATCH THIS FORMAT):

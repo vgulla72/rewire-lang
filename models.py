@@ -75,7 +75,6 @@ class PeopleSearchInput(BaseModel):
     previous_title: str
     location: str
     recommended_roles: CareerRecommendationsOutput
-    recommended_companies: CompanyRecommendationsOutput
 
 # -----------------------------
 # Output Models

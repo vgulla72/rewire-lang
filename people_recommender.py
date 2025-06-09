@@ -2,7 +2,7 @@ from langchain_openai import ChatOpenAI
 from langchain.schema import SystemMessage, HumanMessage
 from langchain.output_parsers import PydanticOutputParser
 from pydantic import BaseModel
-from models import PeopleSearchInput, PeopleSearchOutput, PersonExample, CareerRecommendation, CareerRecommendationsOutput, CompanyInput, CompanyRecommendation, CompanyRecommendationsOutput
+from models import PeopleSearchInput, PeopleSearchOutput, PersonExample, CareerRecommendation, CareerRecommendationsOutput
 from resume_analyzer import ResumeAnalyzer
 from typing import List
 import streamlit as st
@@ -97,7 +97,7 @@ def find_people_transitions(input_data: PeopleSearchInput) -> PeopleSearchOutput
 
     format_instructions = parser.get_format_instructions()
 
-    system_msg = SystemMessage(content="""You are a recruitment analyst tasked with reviewing LinkedIn profiles to identify candidates who have made specific career transitions based on semantic similarity and present the reasoning too.
+    system_msg = SystemMessage(content="""You are a talent management expert tasked with reviewing LinkedIn profiles to identify candidates who have made specific career transitions and are successful at it.
     
 Your output must be valid JSON following the schema in the instructions. If you cannot extract sufficient information for at least one person, return a valid JSON with an empty matches array like this:
 ```json
@@ -112,10 +112,10 @@ Do not provide explanations outside of the JSON structure. If some information i
     target_roles_query = ", ".join(role_titles)
     
     human_prompt = f"""
-You will be shown web search results (Title, Snippet, URL) that are mostly LinkedIn profiles. From these, identify individuals who satisfy the following:
+You will be shown web search results (Title, Snippet, URL) that are  LinkedIn profiles. Review their linkedin profile pages and identify individuals who satisfy the following:
 
-1. Previous title similar to: "{previous_title}"
-2. Current title similar to one of: "{target_roles_query}"
+1. Previous role similar to: "{previous_title}"
+2. Current role similar to one of: "{target_roles_query}"
 3. Located in or around: "{location}"
 
 Extract:
