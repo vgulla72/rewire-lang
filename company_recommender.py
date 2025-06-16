@@ -38,16 +38,21 @@ def recommend_companies(input_data: CompanyInput) -> CompanyRecommendationsOutpu
         f"- {rec.title}: {rec.reason}"
         for rec in input_data.career_recommendations.career_recommendations
     ])
-    preferred_location = input_data.structured_info.get("location", "anywhere")
+    preferred_location = input_data.structured_info.get("location", "remote")
 
     prompt = f"""
-    You are a company recommendation expert.
+    You are an expert at matching professionals with companies that are actively hiring for relevant roles.
 
-    Based on the structured resume info, inferred insights, career change reason, and hobbies/passions,
-    recommend companies that hire into roles in {formatted_recommendations} and explain why each is a fit.
-    Only recommend companies or organizations if they align with the work environment and cultural factors important to the user and located in {preferred_location}.
-    Recommend off the beaten path companies that are not commonly found on LinkedIn or job boards.
-    Include the work environment and cultural factors considered for each recommendation.
+    Based on the following information, recommend companies that:
+    1. CURRENTLY HAVE OPEN POSITIONS for roles similar to the {formatted_recommendations}
+    2. Are located in {preferred_location} (or offer remote work)
+    3. Match the candidate's profile, experience, and preferences
+
+    IMPORTANT:
+    - ONLY recommend companies that you can confirm have active job openings for roles like {formatted_recommendations} in {preferred_location}
+    - If you cannot verify current openings, do not recommend the company
+    - For each recommendation, specify which recommended role(s) they're hiring for
+    - Provide a brief reason for each recommendation, explaining why the company is a good fit
 
     STRUCTURED INFO:
     {input_data.structured_info}

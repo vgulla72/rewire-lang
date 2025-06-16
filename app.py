@@ -68,7 +68,7 @@ if submitted and uploaded_file:
                 "input_data": career_input.model_dump()
             })
             st.subheader("🌐 Sector Recommendations")   
-            st.write(sector_recommendations)
+            st.write(sector_recommendations.json())
             #st.write("-----------")
             # Initialize an empty list before the loop
             all_career_recommendations = []
@@ -85,24 +85,24 @@ if submitted and uploaded_file:
                 })
                 try:
                     parsed_recommendations = CareerRecommendationsOutput.model_validate(raw_response)
-                    st.write(parsed_recommendations)
+                    st.write(parsed_recommendations.json())
                     all_career_recommendations.extend(parsed_recommendations.career_recommendations)
                 except Exception as e:
                     st.error(f"❌ Failed to parse career recommendations: {e}")
            
             # Call the company recommender tool
-            #company_input = CompanyInput(
-            #    structured_info=result["structured_info"],
-            #   inferred_insights=result["inferred_insights"],
-            #    career_change_reason=reason_for_change,
-            #   hobbies_and_passions=hobbies_input,
-            #   career_recommendations=career_recommendations
-            #)
-            #company_recommendations = recommend_companies.invoke({
-            #   "input_data": company_input.model_dump()
-            #})
-            #st.subheader("🚀 Company Recommendations")     
-            #st.write(company_recommendations)
+            company_input = CompanyInput(
+                structured_info=result["structured_info"],
+               inferred_insights=result["inferred_insights"],
+                career_change_reason=reason_for_change,
+               hobbies_and_passions=hobbies_input,
+               career_recommendations=CareerRecommendationsOutput(career_recommendations=all_career_recommendations)
+            )
+            company_recommendations = recommend_companies.invoke({
+               "input_data": company_input.model_dump()
+            })
+            st.subheader("🚀 Company Recommendations")     
+            st.write(company_recommendations.json())
             
             # Call the people recommender tool
             st.subheader("🔍 People Search")
