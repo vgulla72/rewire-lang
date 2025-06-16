@@ -68,7 +68,7 @@ if submitted and uploaded_file:
                 "input_data": career_input.model_dump()
             })
             st.subheader("🌐 Sector Recommendations")   
-            st.write(sector_recommendations.json())
+            st.write(sector_recommendations)
             #st.write("-----------")
             # Initialize an empty list before the loop
             all_career_recommendations = []
@@ -85,7 +85,7 @@ if submitted and uploaded_file:
                 })
                 try:
                     parsed_recommendations = CareerRecommendationsOutput.model_validate(raw_response)
-                    st.write(parsed_recommendations.json())
+                    st.write(parsed_recommendations)
                     all_career_recommendations.extend(parsed_recommendations.career_recommendations)
                 except Exception as e:
                     st.error(f"❌ Failed to parse career recommendations: {e}")
@@ -102,7 +102,7 @@ if submitted and uploaded_file:
                "input_data": company_input.model_dump()
             })
             st.subheader("🚀 Company Recommendations")     
-            st.write(company_recommendations.json())
+            st.write(company_recommendations)
             
             # Call the people recommender tool
             st.subheader("🔍 People Search")
