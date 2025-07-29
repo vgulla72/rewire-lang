@@ -9,6 +9,7 @@ from company_recommender import recommend_companies
 from sector_recommender import recommend_sectors
 from sector_analyzer import analyze_sectors
 from people_recommender import find_people_transitions
+from pivot_recommender import recommend_pivot_paths
 #from people_crew import find_people_transitions
 from langchain_openai import ChatOpenAI
 from langchain.tools import tool
@@ -21,8 +22,9 @@ st.markdown("Upload a resume PDF and get structured information and insights.")
 with st.form("resume_form"):
     uploaded_file = st.file_uploader("Upload Resume (PDF)", type=["pdf"])
     reason_for_change = st.text_area("✍️ Reason for career change (optional)")
-    hobbies_input = st.text_input("🎯 Hobbies/passions (comma-separated)", placeholder="e.g., photography, mentoring, hiking")
-
+    hobbies_input = st.text_input("🎯 Specific Interests or super-powers you want to consider in this pivot (comma-separated)", placeholder="e.g., photography, mentoring, hiking")
+    preferred_engagement = st.selectbox("What is your anticipated engagement level:", ["Full-time", "Part-time"], index=1)
+    compensation_preference = st.selectbox("What is your compensation expectation:", ["Competitive", "Flexible"], index=0)
     # Submit button inside the form
     submitted = st.form_submit_button("🔍 Analyze Resume")
 
@@ -56,13 +58,20 @@ if submitted and uploaded_file:
             if hobbies_input.strip():
                 st.subheader("🏓 Hobbies / Passions")
                 st.write(hobbies_input)
+            st.subheader("📍 Preferred Engagement")
+            st.write(preferred_engagement)
+            st.subheader("💰 Compensation Expectation") 
+            st.write(compensation_preference)
+
             
             # Call the career recommender tool
             career_input = CareerInput(
                 structured_info=result["structured_info"],
                 inferred_insights=result["inferred_insights"],
                 career_change_reason=reason_for_change,
-                hobbies_and_passions=hobbies_input
+                hobbies_and_passions=hobbies_input,
+                preferred_engagement=preferred_engagement,
+                compensation_preference=compensation_preference
             )
             sector_recommendations = recommend_sectors.invoke({
                 "input_data": career_input.model_dump()

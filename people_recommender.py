@@ -59,18 +59,18 @@ def find_people_transitions(input_data: PeopleSearchInput) -> PeopleSearchOutput
     # Run individual searches for each role and collect results
     all_linkedin_results = []
     unique_urls = set()  # To track unique LinkedIn profiles
-    st.write(f"Searching for roles: {', '.join(role_titles)}")
+    #st.write(f"Searching for roles: {', '.join(role_titles)}")
     for role in role_titles:
         # Build search query for this specific role
         query = (
             f'site: linkedin.com/in {role} AND {previous_title} AND {location}'
         )
         
-        st.write(f"Searching for: {role}")
-        st.write(f"Running Serper search with query: {query}")
+        #st.write(f"Searching for: {role}")
+        #st.write(f"Running Serper search with query: {query}")
         search_results = serper_search(query=query, num_results=10)  # Reduced to 10 per role to control API usage
 
-        st.write(search_results)
+        #st.write(search_results)
         # Filter LinkedIn profiles
         linkedin_results = [item for item in search_results if "linkedin.com/in/" in item.get("link", "")]
         print(f"Found {len(linkedin_results)} LinkedIn profiles for {role}")
@@ -103,7 +103,8 @@ def find_people_transitions(input_data: PeopleSearchInput) -> PeopleSearchOutput
 
     Key criteria for a good match:
     1. Clear evidence of transition from a role similar to the user's previous position
-    2. Demonstrated success in one of the target roles (measured by tenure, promotions, or achievements)
+    2. Current role must be similar to one of the target roles provided
+    3. Profiles must be based in or near the specified location
     3. Logical progression in their career path that makes sense for the transition
 
     For each potential match, you must identify:
@@ -127,8 +128,8 @@ def find_people_transitions(input_data: PeopleSearchInput) -> PeopleSearchOutput
     Analyze these LinkedIn profiles to find people who have successfully transitioned from roles like "{previous_title}" to one of these target roles: "{target_roles_query}" in {location}.
 
     For each profile, evaluate:
-    1. Career Progression: Does their work history show a clear transition path?
-    2. Role Fit: Does their current role match one of our target roles?
+    1. Career Progression: Did they transition from a role similar to "{previous_title}"?
+    2. Role Fit: Is their current role similar one of our target roles? {target_roles_query}
     3. Success Indicators: Have they been in the role >1 year? Any promotions/achievements mentioned?
     4. Location: Are they based in or near {location}?
 

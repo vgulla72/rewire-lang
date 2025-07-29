@@ -29,7 +29,7 @@ parser = PydanticOutputParser(pydantic_object=CompanyRecommendationsOutput)
 
 @tool
 def recommend_companies(input_data: CompanyInput) -> CompanyRecommendationsOutput:
-    """Recommend companies based on resume and context and career recommendations."""
+    """Recommend companies based on resume context and job openings for roles similar to career recommendations."""
 
     format_instructions = parser.get_format_instructions()
 
@@ -41,11 +41,11 @@ def recommend_companies(input_data: CompanyInput) -> CompanyRecommendationsOutpu
     preferred_location = input_data.structured_info.get("location", "remote")
 
     prompt = f"""
-    You are an expert at matching professionals with companies that are actively hiring for relevant roles.
+    You are an expert at finding companies that are currently actively hiring or have in the past hired for recommended roles.
 
     Based on the following information, recommend companies that:
     1. CURRENTLY HAVE OPEN POSITIONS for roles similar to the {formatted_recommendations}
-    2. Are located in {preferred_location} (or offer remote work)
+    2. Are located in {preferred_location} or offer remote work
     3. Match the candidate's profile, experience, and preferences
 
     IMPORTANT:

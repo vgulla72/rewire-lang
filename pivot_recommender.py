@@ -27,45 +27,45 @@ llm = ChatOpenAI(
 career_parser = PydanticOutputParser(pydantic_object=CareerRecommendationsOutput)
 
 @tool
-def recommend_career_paths(input_data: CareerInput, sector: str, sector_analysis: List[str]) -> CareerRecommendationsOutput:
-    """Recommend career transformations in the {sector} sector
-    based on transferable skills, {sector_analysis} and market opportunities."""
+def recommend_pivot_paths(input_data: CareerInput, sector: str, sector_analysis: List[str]) -> CareerRecommendationsOutput:
+    """Recommend non-linear career pivots into the {sector} sector based on transferable strengths, passion indicators, {sector_analysis}, and market demand."""
 
     format_instructions = career_parser.get_format_instructions()
     preferred_location = input_data.structured_info.get("location", "anywhere")
     preferred_engagement = input_data.structured_info.get("preferred_engagement", "full-time")
     compensation_preference = input_data.structured_info.get("compensation_preference", "competitive")
-    preferred_industry = input_data.structured_info.get("industry", "any industry")
 
     prompt = f""" 
-You are a career transition specialist. 
-Your mission: Identify 2-3 high-potential career transition opportunities in their preferred industry {preferred_industry} within {sector} that align with their reason for change, their preferred engagement type: {preferred_engagement} and Compensation expectations: {compensation_preference}. 
-Prioritize roles that offer the best match with their hobbies {input_data.hobbies_and_passions}. 
-For each recommendation, explain why the role is a good fit for the user's preferred engagement and compensation expectations.
+Your mission: Recommend 2–3 **non-linear, high-potential career pivot opportunities** within the {sector} sector for this individual. These should not assume a direct step forward in their current career path, but instead reflect creative, adjacent, or cross-sector leaps that make use of their **transferable strengths**, **motivation for change**, and **passion indicators** ({input_data.hobbies_and_passions}).
+
+Focus on:
+- Roles they may not have considered but are an unexpected fit
+- How their **soft skills, leadership traits, or cross-domain experience** could shine
+- Opportunities for **identity-shifting roles** (e.g., teacher → UX researcher, ops lead → AI ethics consultant)
+- Hybrid jobs and interdisciplinary roles gaining traction in {sector}
+-Only recommend roles that are actively being hired for today. Validate each role title and at least one alternative title against real job listings in {preferred_location} using live job search.
 Analyze this profile through multiple lenses:
 
 ## ANALYSIS FRAMEWORK
 
-### 1. **Skill Adjacency Mapping**
-- Core transferable skills → Adjacent high-value applications across sectors 
-- Engagement preferences -> {preferred_engagement} roles
-- Compensation expectations → Roles that meet or exceed {compensation_preference}
-- IC vs. Managerial roles → Leadership/management opportunities
-- Career aspirations → Growth trajectories in {sector} 
-- Passion indicators → Roles that align with personal interests {input_data.hobbies_and_passions}
-- Domain expertise → Cross-industry applications
-- Soft skills → Leadership/consulting opportunities
-- Industry preferences -> Do not confine to one industry, explore all industries where their skills are in demand
+### 1. **Career Reframing Through Transferable Strengths**
+- Core strengths → Surprising yet strategic pivot roles
+- Engagement preferences → Non-traditional or hybrid roles supporting {preferred_engagement}
+- Consider Compensation expectations {compensation_preference} → Evaluate alignment even if pivot includes a short-term tradeoff
+- Soft skills and personal interests → Leverage to uncover creative fit
+- IC vs. Managerial flexibility → Explore both tactical and strategic paths
+- Domain overlap → Look for unusual entry points from previous roles
+- Passion indicators → Anchor in interests like {input_data.hobbies_and_passions}
 
 ### 2. **Market Intelligence Synthesis**
 - Understand and creatively apply the {sector_analysis}
 
 ### 3. **Hidden Market Demand**
-- Niche roles companies struggle to fill
-- Emerging job categories (created in last 2-3 years)
-- Cross-functional hybrid positions
-- Consultant-to-employee conversion opportunities
-- Cross-sector skills that are undervalued in current market
+- Niche or undervalued cross-functional roles
+- Interdisciplinary opportunities with low traditional barriers to entry
+- Roles where past experience provides unusual credibility
+- Career pivots common among mid-career professionals
+- Consultant-to-employee transitions or fractional roles that open full-time pathways
 
 
 ### Required Output Structure (MUST MATCH THIS FORMAT):

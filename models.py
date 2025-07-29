@@ -20,18 +20,18 @@ class StructuredResumeInfo(BaseModel):
     education: List[EducationEntry]
     location: Optional[str] # e.g., "Greater Seattle Area, WA"
     work_experience: List[ExperienceEntry]
-    certifications: List[str]
+    certifications: Optional[List[Optional[str]]] = []
     total_years_experience: Optional[int]
 
 class InferredProfileInsights(BaseModel):
-    domain: str  # e.g., "Data Science"
-    industry: str  # e.g., "Healthcare"
-    seniority_level: str  # e.g., "Mid-Level"
-    role_type: str  # e.g., "Individual Contributor"
-    skills: List[str]  # e.g., ["Python", "Machine Learning"]
-    personality_traits: List[str]  # e.g., ["Analytical", "Team Player"]
-    workplace_likes: List[str]  # e.g., ["Remote Work", "Flexible Hours"]
-    workplace_dislikes: List[str]  # e.g., ["Micromanagement", "Long Commutes"]
+    domain: Optional[str]  # e.g., "Data Science"
+    industry: Optional[str]  # e.g., "Healthcare"
+    seniority_level: Optional[str]  # e.g., "Mid-Level"
+    role_type: Optional[str]  # e.g., "Individual Contributor"
+    skills: Optional[List[Optional[str]]] = []  # e.g., ["Python", "Machine Learning"]
+    personality_traits: Optional[List[Optional[str]]] = []  # e.g., ["Analytical", "Team Player"]
+    workplace_likes: Optional[List[Optional[str]]] = []  # e.g., ["Remote Work", "Flexible Hours"]
+    workplace_dislikes: Optional[List[Optional[str]]] = []  # e.g., ["Micromanagement", "Long Commutes"]
 
 # Pydantic model to structure input
 class CareerInput(BaseModel):
@@ -39,6 +39,8 @@ class CareerInput(BaseModel):
     inferred_insights: dict
     career_change_reason: str
     hobbies_and_passions: str
+    preferred_engagement: str
+    compensation_preference: Optional[str] = None  # e.g., "Flexible"
 
 # Define output model
 class CareerRecommendation(BaseModel):

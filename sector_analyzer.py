@@ -28,7 +28,7 @@ career_parser = PydanticOutputParser(pydantic_object=CareerRecommendationsOutput
 
 @tool
 def analyze_sectors(sector: str) -> str:
-    """Deeply analyze market trends in sector (private, public, academia, nonprofit) 
+    """Deeply analyze market trends in sector (private, public, academia, nonprofit, freelance) 
     to be able to recommend roles based on individual profiles and interests."""
 
 
@@ -60,6 +60,6 @@ Act as a Career and Labor Market Trends Analyst. Generate a detailed, evidence-b
     return response.content
 
 if __name__ == "__main__":
-    sector = "public"  # Example sector
+    sector = "freelance"  # Example sector
     result = analyze_sectors(sector)
     print(result)

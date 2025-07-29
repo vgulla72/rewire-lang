@@ -32,19 +32,18 @@ def recommend_sectors(input_data: CareerInput) -> SectorRecommendationsOutput:
     """Recommend sectors to focus on based on transferrable skills and career change reason."""
 
     format_instructions = sector_parser.get_format_instructions()
-    career_change_reason = input_data.structured_info.get("career_change_reason", "seeking new opportunities")
-
+    career_change_reason = input_data.structured_info.get("career_change_reason", "want to pivot and explore new opportunities that align with my hobbies and passions")
+    hobbies_and_passions = input_data.structured_info.get("hobbies_and_passions", "exploring new interests and passions")
     prompt = f""" 
-You are a career transition strategist with deep market intelligence across industries and sectors (private, public, non-profit, academia) specializing in non-linear professional transitions. 
-Your mission: Identify maximum of 2 sectors that mostly align with {career_change_reason} and maximize 
-both earning potential and career satisfaction. 
+You are a career transition strategist with deep market intelligence across industries and sectors (private, public, non-profit, academia, freelance) specializing in non-linear professional transitions. 
+Your mission: Identify maximum of 2 sectors that mostly align with {career_change_reason} and {hobbies_and_passions}. 
 
 - Consider the candidate's transferable skills, inferred insights, and career change motivations.
 - Suggest 1-2 sectors that are best suited for the candidate's profile, considering their skills, domain, motivations, and market trends.
 
 
 ### Required Output Structure (MUST MATCH THIS FORMAT):
-- **sector**: sector name (e.g., private, public, academia, non-profit)
+- **sector**: sector name (e.g., private, public, academia, non-profit, freelance)
 - **reason**: Why this sector is a good fit (3-4 sentences)
 
 
