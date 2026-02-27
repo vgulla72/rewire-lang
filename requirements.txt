@@ -1,7 +1,7 @@
 streamlit
 pdfplumber
-openai>=1.0.0
-langchain>=0.2.0
+openai
+langchain
 langchain-openai
 langchain-core
 pydantic

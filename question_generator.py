@@ -1,6 +1,6 @@
 from typing import List
 from langchain.tools import tool
-from langchain.output_parsers import PydanticOutputParser
+from langchain_core.output_parsers import PydanticOutputParser
 from models import question_answer, question_input
 #from langchain.chat_models import ChatOpenAI
 from langchain_openai import ChatOpenAI
