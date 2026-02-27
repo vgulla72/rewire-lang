@@ -12,7 +12,7 @@ api_key = os.getenv("OPENROUTER_API_KEY")
 
 # Instantiate LLM
 #llm = ChatOpenAI(temperature=0, model="gpt-4o")
-model_name = "deepseek/deepseek-chat-v3-0324:free"  # Example model name
+model_name = "openai/gpt-oss-20b:free"  # Example model name
 llm = ChatOpenAI(
             model=model_name,  # Note: changed from model_name to model
             temperature=0,
@@ -39,6 +39,7 @@ def recommend_companies(input_data: CompanyInput) -> CompanyRecommendationsOutpu
         for rec in input_data.career_recommendations.career_recommendations
     ])
     preferred_location = input_data.structured_info.get("location", "remote")
+    preferred_location = "New York, NY"
 
     prompt = f"""
     You are an expert at finding companies that are currently actively hiring or have in the past hired for recommended roles.

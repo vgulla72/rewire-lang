@@ -33,6 +33,20 @@ class InferredProfileInsights(BaseModel):
     workplace_likes: Optional[List[Optional[str]]] = []  # e.g., ["Remote Work", "Flexible Hours"]
     workplace_dislikes: Optional[List[Optional[str]]] = []  # e.g., ["Micromanagement", "Long Commutes"]
 
+class question_answer(BaseModel):
+    question: str
+    # A list of multiple choice options. The correct answer should be one of these.
+    options: List[str]
+    # The correct answer text (should match one of the options)
+    answer: str
+
+class question_input(BaseModel):
+    topic: str
+    age: Optional[int] = None
+    gender: Optional[str] = None
+
+    
+
 # Pydantic model to structure input
 class CareerInput(BaseModel):
     structured_info: dict

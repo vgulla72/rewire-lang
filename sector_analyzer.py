@@ -12,7 +12,7 @@ api_key = os.getenv("OPENROUTER_API_KEY")
 
 # Instantiate LLM
 #llm = ChatOpenAI(temperature=0, model="gpt-4o")
-model_name = "deepseek/deepseek-chat-v3-0324:free"  # Example model name
+model_name = "openai/gpt-oss-20b:free"  # Example model name
 llm = ChatOpenAI(
             model=model_name,  # Note: changed from model_name to model
             temperature=0,

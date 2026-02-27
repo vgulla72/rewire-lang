@@ -10,6 +10,7 @@ from models import StructuredResumeInfo, InferredProfileInsights
 
 
 class ResumeAnalyzer:
+<<<<<<< HEAD
     def __init__(self, model_name="mistral:latest", temperature=0):
         # Set model name - this should match a model available in your local Ollama install
         ollama_model = "mistral:latest"  # or "mistral", "llama3", etc.
@@ -24,6 +25,19 @@ class ResumeAnalyzer:
         base_url="http://localhost:11434",
         temperature=0.8,
         request_timeout=60 
+=======
+    def __init__(self, model_name="openai/gpt-oss-20b:free", temperature=0):
+        # Configure OpenRouter
+        self.llm = ChatOpenAI(
+            model=model_name,  # Note: changed from model_name to model
+            temperature=temperature,
+            openai_api_base="https://openrouter.ai/api/v1",  # Remove /chat/completions
+            openai_api_key=api_key,
+            default_headers={
+                "HTTP-Referer": "https://rewireme.me",  # Required
+                "X-Title": "Resume Analyzer"  # Recommended
+            }
+>>>>>>> c3511de (Add quiz question generation based on topic)
         )
         self.structured_parser = PydanticOutputParser(pydantic_object=StructuredResumeInfo)
         self.insight_parser = PydanticOutputParser(pydantic_object=InferredProfileInsights)
