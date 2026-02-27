@@ -1,6 +1,6 @@
 from crewai import Agent, Task, Crew
 from langchain_openai import ChatOpenAI
-from langchain.output_parsers import PydanticOutputParser
+from langchain_core.output_parsers import PydanticOutputParser
 from models import PeopleSearchInput, PeopleSearchOutput
 from tools import serper_search  # Assuming it's in a tools.py or same file
 import os

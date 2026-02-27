@@ -3,29 +3,13 @@ import pdfplumber
 #from langchain_openai import ChatOpenAI
 from langchain_ollama import ChatOllama
 #from langchain_community.chat_models import ChatOllama
-from langchain.output_parsers import PydanticOutputParser
+from langchain_core.output_parsers import PydanticOutputParser
 from models import StructuredResumeInfo, InferredProfileInsights
 
 #api_key = os.getenv("OPENROUTER_API_KEY")
 
 
 class ResumeAnalyzer:
-<<<<<<< HEAD
-    def __init__(self, model_name="mistral:latest", temperature=0):
-        # Set model name - this should match a model available in your local Ollama install
-        ollama_model = "mistral:latest"  # or "mistral", "llama3", etc.
-
-        #self.llm = ChatOllama(
-        #model=ollama_model,
-        #base_url="http://10.0.0.101:11434",
-        #temperature=0.8
-        #)
-        self.llm = ChatOllama(
-        model=ollama_model,
-        base_url="http://localhost:11434",
-        temperature=0.8,
-        request_timeout=60 
-=======
     def __init__(self, model_name="openai/gpt-oss-20b:free", temperature=0):
         # Configure OpenRouter
         self.llm = ChatOpenAI(
@@ -37,7 +21,6 @@ class ResumeAnalyzer:
                 "HTTP-Referer": "https://rewireme.me",  # Required
                 "X-Title": "Resume Analyzer"  # Recommended
             }
->>>>>>> c3511de (Add quiz question generation based on topic)
         )
         self.structured_parser = PydanticOutputParser(pydantic_object=StructuredResumeInfo)
         self.insight_parser = PydanticOutputParser(pydantic_object=InferredProfileInsights)

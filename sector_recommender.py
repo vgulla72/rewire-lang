@@ -1,7 +1,7 @@
 from typing import List
 from pydantic import BaseModel
-from langchain.tools import tool
-from langchain.output_parsers import PydanticOutputParser
+from langchain_core.tools import tool
+from langchain_core.output_parsers import PydanticOutputParser
 from models import CareerInput, CareerRecommendationsOutput, SectorRecommendationsOutput, sectorrecommendation
 from sector_analyzer import analyze_sectors
 #from langchain.chat_models import ChatOpenAI
