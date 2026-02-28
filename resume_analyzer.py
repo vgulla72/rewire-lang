@@ -1,7 +1,7 @@
 import os
 import pdfplumber
 #from langchain_openai import ChatOpenAI
-from langchain_ollama import ChatOllama
+#from langchain_ollama import ChatOllama
 #from langchain_community.chat_models import ChatOllama
 from langchain_core.output_parsers import PydanticOutputParser
 from models import StructuredResumeInfo, InferredProfileInsights
