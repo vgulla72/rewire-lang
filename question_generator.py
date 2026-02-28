@@ -1,7 +1,7 @@
 from typing import List
 from langchain_core.tools import tool
 from langchain_core.output_parsers import PydanticOutputParser
-from models import question_answer, question_input
+from models import question_answer, question_input, daily_tasks
 #from langchain.chat_models import ChatOpenAI
 from langchain_openai import ChatOpenAI
 import os
@@ -11,7 +11,7 @@ api_key = os.getenv("OPENROUTER_API_KEY")
 
 # Instantiate LLM
 #llm = ChatOpenAI(temperature=0, model="gpt-4o")
-model_name = "deepseek/deepseek-r1-0528"  # Example model name
+model_name = "meta-llama/llama-3.3-70b-instruct:free"  # Example model name
 llm = ChatOpenAI(
             model=model_name,  # Note: changed from model_name to model
             temperature=0,
@@ -25,6 +25,7 @@ llm = ChatOpenAI(
 
 # Output parser
 question_parser = PydanticOutputParser(pydantic_object=question_answer)
+daily_tasks_parser = PydanticOutputParser(pydantic_object=daily_tasks)
 
 @tool
 def generate_questions(input_data: question_input) -> question_answer:
@@ -56,3 +57,33 @@ Your mission: Generate a relevant question, a list of options (at least four) an
 
     response = llm.invoke(prompt)
     return question_parser.parse(response.content)
+
+@tool
+def daily_tasks(input_data: question_input) -> daily_tasks:
+    """Generate daily tasks based on the input data."""
+
+    format_instructions = daily_tasks_parser.get_format_instructions()
+    topic = input_data.topic
+    age = input_data.age
+    gender = input_data.gender
+    # update prompt to request multiple choice options as well
+    prompt = f"""
+You are a therapist specialised in treating dementia patients and generating daily tasks based person's age, gender, location, religion to improve their cognition and memory.
+Your mission: Generate a list of daily tasks that are suitable for a dementia patient.
+
+### Required Output Structure (MUST MATCH THIS FORMAT):
+- **tasks**: A list of daily tasks that are suitable for a dementia patient
+
+
+### Age: {age}  
+### Gender: {gender}
+### Location: Rajahmundry, Andhra Pradesh, India
+### Religion: Hinduism
+
+### Format Requirements:
+{format_instructions}
+
+"""
+
+    response = llm.invoke(prompt)
+    return daily_tasks_parser.parse(response.content)

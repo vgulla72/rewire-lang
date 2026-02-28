@@ -1,5 +1,5 @@
 import streamlit as st
-from question_generator import generate_questions
+from question_generator import generate_questions, daily_tasks
 from models import question_input
 
 st.set_page_config(page_title="User Input Form", layout="centered")
@@ -29,6 +29,8 @@ if submitted:
     st.write(f"**Age:** {age}")
     st.write(f"**Gender:** {gender}")
     st.write(f"**Topic:** {topic}")
+    tasks_input = question_input(topic=topic, age=age, gender=gender)
+   
     
     # Call the question_generator tool with the topic
    # question_gen_input = question_input(topic=topic)
@@ -55,3 +57,11 @@ if 'qa_result' in st.session_state:
             st.success("✅ Correct! Well done.")
         else:
             st.error(f"❌ Wrong. The correct answer is: {qa.answer}")
+
+st.write("Generating daily tasks based on your input...")
+tasks_result = daily_tasks.invoke({
+    "input_data": tasks_input.model_dump()
+})
+st.write("Here are some daily tasks suitable for you:")
+for idx, task in enumerate(tasks_result.tasks, 1):
+    st.write(f"{idx}. {task}")  

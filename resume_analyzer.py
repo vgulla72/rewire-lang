@@ -10,7 +10,7 @@ api_key = os.getenv("OPENROUTER_API_KEY")
 
 
 class ResumeAnalyzer:
-    def __init__(self, model_name="openai/gpt-oss-20b:free", temperature=0):
+    def __init__(self, model_name="deepseek/deepseek-r1-0528", temperature=0):
         # Configure OpenRouter
         self.llm = ChatOpenAI(
             model=model_name,  # Note: changed from model_name to model

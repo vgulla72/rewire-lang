@@ -12,7 +12,7 @@ api_key = os.getenv("OPENROUTER_API_KEY")
 
 # Instantiate LLM
 #llm = ChatOpenAI(temperature=0, model="gpt-4o")
-model_name = "openai/gpt-oss-20b:free"  # Example model name
+model_name = "deepseek/deepseek-r1-0528"  # Example model name
 llm = ChatOpenAI(
             model=model_name,  # Note: changed from model_name to model
             temperature=0,
@@ -26,7 +26,6 @@ llm = ChatOpenAI(
 # Output parser
 career_parser = PydanticOutputParser(pydantic_object=CareerRecommendationsOutput)
 
-@tool
 def analyze_sectors(sector: str) -> str:
     """Deeply analyze market trends in sector (private, public, academia, nonprofit, freelance) 
     to be able to recommend roles based on individual profiles and interests."""

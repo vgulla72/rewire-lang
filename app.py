@@ -24,7 +24,7 @@ with st.form("resume_form"):
     reason_for_change = st.text_area("✍️ Reason for career change (optional)")
     hobbies_input = st.text_input("🎯 Specific Interests or super-powers you want to consider in this pivot (comma-separated)", placeholder="e.g., photography, mentoring, hiking")
     preferred_engagement = st.selectbox("What is your anticipated engagement level:", ["Full-time", "Part-time"], index=1)
-    compensation_preference = st.selectbox("What is your compensation expectation:", ["Competitive", "Flexible"], index=0)
+    compensation_preference = st.selectbox("What is your compensation expectation:", ["Competitive", "Not Priority"], index=0)
     # Submit button inside the form
     submitted = st.form_submit_button("🔍 Analyze Resume")
 

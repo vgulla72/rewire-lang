@@ -45,7 +45,9 @@ class question_input(BaseModel):
     age: Optional[int] = None
     gender: Optional[str] = None
 
-    
+class daily_tasks(BaseModel):
+    tasks: List[str]
+
 
 # Pydantic model to structure input
 class CareerInput(BaseModel):
