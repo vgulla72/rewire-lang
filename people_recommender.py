@@ -1,5 +1,5 @@
 from langchain_openai import ChatOpenAI
-from langchain_core.schema import SystemMessage, HumanMessage
+from langchain_core.messages import SystemMessage, HumanMessage
 from langchain_core.output_parsers import PydanticOutputParser
 from pydantic import BaseModel
 from models import PeopleSearchInput, PeopleSearchOutput, PersonExample, CareerRecommendation, CareerRecommendationsOutput
