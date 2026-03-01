@@ -1,3 +1,5 @@
+from ast import If
+
 import streamlit as st
 from resume_analyzer import ResumeAnalyzer
 import tempfile
@@ -10,6 +12,7 @@ from sector_recommender import recommend_sectors
 from sector_analyzer import analyze_sectors
 from people_recommender import find_people_transitions
 from pivot_recommender import recommend_pivot_paths
+from retirement_recommender import recommend_retirement_paths
 #from people_crew import find_people_transitions
 from langchain_openai import ChatOpenAI
 from langchain.tools import tool
@@ -21,7 +24,7 @@ st.markdown("Upload a resume PDF and get structured information and insights.")
 # Use a form to control submission
 with st.form("resume_form"):
     uploaded_file = st.file_uploader("Upload Resume (PDF)", type=["pdf"])
-    reason_for_change = st.text_area("✍️ Reason for career change (optional)")
+    reason_for_change = st.selectbox("Why do you want to change careers?", ["Retirement", "Career Growth", "Pivot"], index=0)
     hobbies_input = st.text_input("🎯 Specific Interests or super-powers you want to consider in this pivot (comma-separated)", placeholder="e.g., photography, mentoring, hiking")
     preferred_engagement = st.selectbox("What is your anticipated engagement level:", ["Full-time", "Part-time"], index=1)
     compensation_preference = st.selectbox("What is your compensation expectation:", ["Competitive", "Not Priority"], index=0)
@@ -73,45 +76,51 @@ if submitted and uploaded_file:
                 preferred_engagement=preferred_engagement,
                 compensation_preference=compensation_preference
             )
-            sector_recommendations = recommend_sectors.invoke({
+             # Initialize an empty list before the loop
+            all_career_recommendations = []
+            if reason_for_change == "Retirement":   
+                st.subheader("🔍 Retirement Path Recommendations")
+                all_career_recommendations = recommend_retirement_paths.invoke({
+                    "input_data": career_input.model_dump()
+                })
+                st.write(all_career_recommendations)
+            else:
+                sector_recommendations = recommend_sectors.invoke({
                 "input_data": career_input.model_dump()
             })
-            st.subheader("🌐 Sector Recommendations")   
-            st.write(sector_recommendations)
-            #st.write("-----------")
-            # Initialize an empty list before the loop
-            all_career_recommendations = []
-
-            for sector in sector_recommendations.sectorrecommendations:
-                st.write(f"**Sector:** {sector.sector}")
-                sector_analysis = analyze_sectors(sector.sector)
-                if isinstance(sector_analysis, str):
-                    sector_analysis = [sector_analysis]
-                raw_response = recommend_career_paths.invoke({
-                "input_data": career_input.model_dump(),
-                "sector": sector.sector,
-                "sector_analysis": sector_analysis
+                st.subheader("🌐 Sector Recommendations")   
+                st.write(sector_recommendations)
+                #st.write("-----------")
+                for sector in sector_recommendations.sectorrecommendations:
+                    st.write(f"**Sector:** {sector.sector}")
+                    sector_analysis = analyze_sectors(sector.sector)
+                    if isinstance(sector_analysis, str):
+                        sector_analysis = [sector_analysis]
+                    raw_response = recommend_career_paths.invoke({
+                    "input_data": career_input.model_dump(),
+                    "sector": sector.sector,
+                    "sector_analysis": sector_analysis
+                    })
+                    try:
+                        parsed_recommendations = CareerRecommendationsOutput.model_validate(raw_response)
+                        st.write(parsed_recommendations)
+                        all_career_recommendations.extend(parsed_recommendations.career_recommendations)
+                    except Exception as e:
+                        st.error(f"❌ Failed to parse career recommendations: {e}")
+            
+                # Call the company recommender tool
+                company_input = CompanyInput(
+                    structured_info=result["structured_info"],
+                inferred_insights=result["inferred_insights"],
+                    career_change_reason=reason_for_change,
+                hobbies_and_passions=hobbies_input,
+                career_recommendations=CareerRecommendationsOutput(career_recommendations=all_career_recommendations)
+                )
+                company_recommendations = recommend_companies.invoke({
+                "input_data": company_input.model_dump()
                 })
-                try:
-                    parsed_recommendations = CareerRecommendationsOutput.model_validate(raw_response)
-                    st.write(parsed_recommendations)
-                    all_career_recommendations.extend(parsed_recommendations.career_recommendations)
-                except Exception as e:
-                    st.error(f"❌ Failed to parse career recommendations: {e}")
-           
-            # Call the company recommender tool
-            company_input = CompanyInput(
-                structured_info=result["structured_info"],
-               inferred_insights=result["inferred_insights"],
-                career_change_reason=reason_for_change,
-               hobbies_and_passions=hobbies_input,
-               career_recommendations=CareerRecommendationsOutput(career_recommendations=all_career_recommendations)
-            )
-            company_recommendations = recommend_companies.invoke({
-               "input_data": company_input.model_dump()
-            })
-            st.subheader("🚀 Company Recommendations")     
-            st.write(company_recommendations)
+                st.subheader("🚀 Company Recommendations")     
+                st.write(company_recommendations)
             
             # Call the people recommender tool
             st.subheader("🔍 People Search")
